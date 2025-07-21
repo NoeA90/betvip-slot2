@@ -3,60 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Espacio exclusivo</title>
+  <title>Acceso exclusivo</title>
   <style>
     body {
-      background: url('./juga%20ya.jpg') no-repeat center center fixed;
-      background-size: cover;
       margin: 0;
+      padding: 0;
+      background: url('juga ya.jpg') no-repeat center center fixed;
+      background-size: cover;
       font-family: Arial, sans-serif;
       color: white;
-      text-align: center;
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: center;
       height: 100vh;
-      padding: 20px;
+      text-align: center;
+    }
+
+    .contenedor {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px 20px;
+      border-radius: 15px;
+      display: inline-block;
+      max-width: 90%;
     }
 
     h1 {
-      font-size: 2.2em;
+      font-size: 2em;
       margin-bottom: 10px;
     }
 
     p {
       font-size: 1.2em;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
 
     .boton {
-      background-color: #ff5100;
+      background-color: #ff4500;
       color: white;
       padding: 15px 30px;
-      border: none;
-      border-radius: 12px;
-      font-size: 22px;
       text-decoration: none;
+      font-size: 1.5em;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
       display: inline-block;
-      transition: background 0.3s ease;
     }
 
     .boton:hover {
-      background-color: #e84900;
+      background-color: #e03d00;
     }
   </style>
+</head>
+<body>
+  <div class="contenedor">
+    <h1>🎰 ¡Accedé al espacio exclusivo!</h1>
+    <p>Verificamos tu acceso... Esperá unos segundos o hacé clic en el botón.</p>
+    <a href="https://wa.me/5491157294321" class="boton">Ingresar</a>
+  </div>
+
   <script>
-    // Redirección automática tras 4 segundos
+    // Redirección automática después de 4 segundos
     setTimeout(() => {
       window.location.href = "https://wa.me/5491157294321";
     }, 4000);
   </script>
-</head>
-<body>
-  <h1>🎰 ¡Accedé al espacio exclusivo!</h1>
-  <p>Verificamos tu acceso... Esperá unos segundos o hacé clic en el botón.</p>
-
-  <a href="https://wa.me/5491157294321" class="boton">Ingresar</a>
 </body>
 </html>
 
