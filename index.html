@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BET300 - Bono de Bienvenida</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Acceso exclusivo</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    function redireccionar() {
+      window.location.href = "https://wa.me/5491126980720";
+    }
+
+    // Si querés activar redirección automática después de 5 segundos:
+    // setTimeout(redireccionar, 5000);
+  </script>
 </head>
 <body>
-    <div class="container">
-        <img src="background.png" alt="Promoción BET300">
-        <a class="cta-button" href="https://wa.me/5491126980720" target="_blank">RECLAMAR</a>
-    </div>
+  <div class="overlay">
+    <h1>🎰 ¡Accedé al espacio exclusivo!</h1>
+    <p>Verificamos tu acceso... Esperá unos segundos o hacé clic en el botón.</p>
+    <button id="reclamarBtn" onclick="redireccionar()">Reclamar</button>
+    <div class="delay-text">🔒 Acceso limitado solo para invitad@s</div>
+  </div>
 </body>
 </html>
