@@ -2,71 +2,64 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Acceso VIP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Espacio exclusivo</title>
   <style>
     body {
-      background-color: #000;
-      color: #fff;
-      font-family: 'Arial', sans-serif;
-      text-align: center;
-      padding: 40px 20px;
-    }
-    h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
-    }
-    .ingresar-btn {
-      padding: 15px 30px;
-      font-size: 18px;
-      background-color: #ff5500;
+      background: url('./juga%20ya.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      font-family: Arial, sans-serif;
       color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+
+    .boton {
+      background-color: #ff5100;
+      color: white;
+      padding: 15px 30px;
       border: none;
       border-radius: 12px;
-      cursor: pointer;
-      margin-top: 30px;
+      font-size: 22px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.3s ease;
     }
-    #btnWhatsApp {
-      display: none;
-      margin-top: 30px;
-    }
-    #btnWhatsApp img {
-      width: 250px;
+
+    .boton:hover {
+      background-color: #e84900;
     }
   </style>
+  <script>
+    // Redirección automática tras 4 segundos
+    setTimeout(() => {
+      window.location.href = "https://wa.me/5491157294321";
+    }, 4000);
+  </script>
 </head>
 <body>
-
-  <h1>🎰 ¡Accedé al espacio exclusivo! 🎰</h1>
+  <h1>🎰 ¡Accedé al espacio exclusivo!</h1>
   <p>Verificamos tu acceso... Esperá unos segundos o hacé clic en el botón.</p>
 
-  <!-- Botón para mostrar manualmente -->
-  <button class="ingresar-btn" onclick="mostrarBoton()">Ingresar</button>
-
-  <!-- Botón de WhatsApp oculto al inicio -->
-  <div id="btnWhatsApp">
-    <a href="https://wa.me/5491126980720" target="_blank">
-      <img src="https://i.ibb.co/K65xMvT/btn-juga-ahora-wpp.png" alt="JUGÁ AHORA">
-    </a>
-  </div>
-
-  <script>
-    // Mostrar después de 4 segundos automáticamente
-    setTimeout(() => {
-      mostrarBoton();
-    }, 4000);
-
-    // Mostrar manualmente si hace clic en "Ingresar"
-    function mostrarBoton() {
-      const boton = document.getElementById("btnWhatsApp");
-      if (boton.style.display !== "block") {
-        boton.style.display = "block";
-      }
-    }
-  </script>
-
+  <a href="https://wa.me/5491157294321" class="boton">Ingresar</a>
 </body>
 </html>
+
 
 
 
