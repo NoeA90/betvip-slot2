@@ -1,14 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="1; url=https://wa.me/5491157294321" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Conectando a WhatsApp...</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acceso VIP</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    .ingresar-btn {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #ff5500;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 30px;
+    }
+    #btnWhatsApp {
+      display: none;
+      margin-top: 30px;
+    }
+    #btnWhatsApp img {
+      width: 250px;
+    }
+  </style>
 </head>
-<body style="margin: 0; padding: 0; background: url('juga%20ya.jpg') no-repeat center center fixed; background-size: cover; display: flex; justify-content: center; align-items: center; height: 100vh;">
-  <h1 style="color: white; font-family: sans-serif; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px;">Redirigiendo a WhatsApp VIP...</h1>
+<body>
+
+  <h1>🎰 ¡Accedé al espacio exclusivo! 🎰</h1>
+  <p>Verificamos tu acceso... Esperá unos segundos o hacé clic en el botón.</p>
+
+  <!-- Botón para mostrar manualmente -->
+  <button class="ingresar-btn" onclick="mostrarBoton()">Ingresar</button>
+
+  <!-- Botón de WhatsApp oculto al inicio -->
+  <div id="btnWhatsApp">
+    <a href="https://wa.me/5491126980720" target="_blank">
+      <img src="https://i.ibb.co/K65xMvT/btn-juga-ahora-wpp.png" alt="JUGÁ AHORA">
+    </a>
+  </div>
+
+  <script>
+    // Mostrar después de 4 segundos automáticamente
+    setTimeout(() => {
+      mostrarBoton();
+    }, 4000);
+
+    // Mostrar manualmente si hace clic en "Ingresar"
+    function mostrarBoton() {
+      const boton = document.getElementById("btnWhatsApp");
+      if (boton.style.display !== "block") {
+        boton.style.display = "block";
+      }
+    }
+  </script>
+
 </body>
 </html>
+
 
 
