@@ -9,138 +9,166 @@
 
 <style>
 :root{
-  --bg:#0b0f1e; --panel:#121634; --panel2:#0f1330; --border:#1e2150;
-  --text:#e8ebff; --muted:#b7b9d6; --ok:#25D366; --pointer:#22d3ee;
-  --accent:#ffd166; --danger:#ff6b6b; --brand1:#6c59ff; --brand2:#00d1ff;
+  --bg:#070a18; --panel:#0e1331; --panel2:#0a1030; --border:#1d2353;
+  --text:#f3f6ff; --muted:#b9bedf; --ok:#25D366; --pointer:#39e7ff;
+  --accent:#ffd166; --danger:#ff6b6b; --brand1:#7c4dff; --brand2:#00d1ff;
+  --neon:#16f1ff; --gold1:#f6c66a; --gold2:#f3a64e;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;color:var(--text);background:var(--bg);font:16px/1.35 system-ui,-apple-system,Segoe UI,Roboto}
+body{margin:0;color:var(--text);background:radial-gradient(1600px 900px at 50% -10%, #131642 0%, #070a18 55%) fixed;font:16px/1.35 system-ui,-apple-system,Segoe UI,Roboto}
+
+/* brillos de fondo */
 body::before{
-  content:"";position:fixed;inset:0;z-index:-2;
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
   background:
-    radial-gradient(900px 500px at 50% -10%, rgba(101,74,255,.25), transparent),
-    radial-gradient(700px 350px at 100% 0%, rgba(0,209,255,.18), transparent),
-    linear-gradient(180deg,#0b0f1e 0%,#0b0f1e 60%,#0a0d20 100%);
+    radial-gradient(1200px 600px at 50% -20%, rgba(124,77,255,.25), transparent 60%),
+    radial-gradient(900px 400px at 100% 0%, rgba(0,209,255,.18), transparent 60%);
 }
-.bg{position:fixed;inset:0;z-index:-3;opacity:.22;object-fit:cover;width:100%;height:100%}
+
+/* monedas flotando */
+.coin{position:fixed; width:22px; height:22px; border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, #fff6, transparent 55%),
+              radial-gradient(circle at 50% 50%, var(--gold1), var(--gold2));
+  box-shadow:0 0 10px #0008,inset 0 0 5px #0005; filter:saturate(1.2);
+  animation:float 8s linear infinite; opacity:.75; z-index:0
+}
+.coin:nth-child(2){animation-duration:9s; width:18px; height:18px; opacity:.6}
+.coin:nth-child(3){animation-duration:7s; width:24px; height:24px}
+@keyframes float{ from{ transform:translateY(120vh) rotate(0deg) } to{ transform:translateY(-20vh) rotate(360deg) } }
 
 /* layout */
-.container{max-width:980px;margin:0 auto;padding:16px 14px 28px}
+.container{max-width:1020px;margin:0 auto;padding:14px}
 .card{
-  background: radial-gradient(120% 100% at 50% 0%, rgba(124,77,255,.08), rgba(0,0,0,0)) , var(--panel2);
-  border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 15px 40px rgba(0,0,0,.35)
+  background:
+    radial-gradient(140% 100% at 50% 0%, rgba(22,241,255,.08), rgba(0,0,0,0)),
+    var(--panel2);
+  border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.45)
 }
-@media (max-width:560px){
-  .container{padding:0}
-  .card{border-radius:0;border-left:0;border-right:0}
-}
+@media (max-width:560px){ .container{padding:0} .card{border-radius:0;border-left:0;border-right:0} }
 
-.head{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-.brand{height:28px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
-.pill{
-  background:linear-gradient(90deg,rgba(124,77,255,.15),rgba(0,209,255,.15));
-  border:1px solid var(--border); border-radius:999px; padding:6px 10px; font-size:12px; color:var(--muted)
+.head{display:flex;align-items:center;gap:12px;margin:2px 0 12px;flex-wrap:wrap}
+.logo{
+  font-weight:900; letter-spacing:.5px; padding:6px 12px; border-radius:12px;
+  background:linear-gradient(90deg,#ffea8a,#ffb648 40%,#ff7a4f);
+  color:#24170a; text-shadow:0 1px 0 #fff8; box-shadow:0 6px 18px #0008;
 }
-.pill.time{display:flex;align-items:center;gap:8px}
-.badgeTime{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:4px 10px;border-radius:999px;
-  background:rgba(255,204,0,.15);border:1px solid rgba(255,204,0,.35);
-  color:#ffe27a;font-weight:800;font-variant-numeric:tabular-nums;
+.neon{
+  padding:6px 10px;border-radius:999px;border:1px solid #1e2260;color:#cfe4ff;
+  background:linear-gradient(90deg,rgba(124,77,255,.22),rgba(0,209,255,.22));
+  box-shadow:0 0 10px rgba(22,241,255,.25) inset, 0 0 12px rgba(22,241,255,.15);
+  font-size:12px
+}
+.count{display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border-radius:999px;
+  font-weight:800;font-variant-numeric:tabular-nums;
+  color:#ffef95;background:rgba(255,204,0,.14);border:1px solid rgba(255,204,0,.35)
 }
 
 /* grid */
 .grid{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
-@media(min-width:900px){.grid{grid-template-columns:1.1fr .9fr}}
+@media(min-width:920px){.grid{grid-template-columns:1.08fr .92fr}}
 
-/* stage (wheel) */
+/* stage */
 .stage{position:relative;display:flex;align-items:center;justify-content:center}
-.wrap{width:100%;max-width:520px;margin:auto}
+.wrap{width:100%;max-width:560px;margin:auto}
 canvas{width:100%;height:auto;display:block}
 
-/* pointer */
-.pointer{
-  position:absolute; top:6px; left:50%; transform:translateX(-50%);
-  width:0; height:0;
-  border-left: 16px solid transparent;border-right:16px solid transparent;border-bottom:26px solid var(--pointer);
-  filter: drop-shadow(0 4px 10px rgba(34,211,238,.35)); z-index:2;
+/* halo */
+.wheel-halo{
+  position:absolute;inset:0;pointer-events:none;margin:auto;width:100%;max-width:560px;filter:blur(16px) saturate(1.4);opacity:.7
 }
-@media (max-width:420px){ .pointer{ border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:22px solid var(--pointer); top:4px; } }
 
-/* panels, typography */
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px}
+/* pointer neón */
+.pointer{
+  position:absolute; top:10px; left:50%; transform:translateX(-50%);
+  width:0; height:0; z-index:3;
+  border-left: 18px solid transparent; border-right:18px solid transparent; border-bottom:28px solid var(--neon);
+  filter:drop-shadow(0 0 16px rgba(22,241,255,.55)) drop-shadow(0 6px 10px rgba(0,0,0,.6));
+  animation:pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse{ 50%{ filter:drop-shadow(0 0 24px rgba(22,241,255,.9)) drop-shadow(0 6px 10px rgba(0,0,0,.6)) } }
+
+/* panels & ctas */
+.panel{background:linear-gradient(180deg,#0b1138,#0c1130);border:1px solid var(--border);border-radius:16px;padding:16px;position:relative;overflow:hidden}
+.panel::after{content:"";position:absolute;inset:-40% -60% auto auto; transform:rotate(25deg);
+  height:140%; width:30%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent)}
 .center{text-align:center}
 h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px}
 .muted{color:var(--muted)}
 .stat{display:flex;align-items:center;gap:12px;justify-content:center;margin:8px 0 14px}
 .badge{
-  min-width:74px;height:46px;border-radius:12px;
+  min-width:78px;height:50px;border-radius:12px;
   background:radial-gradient(100% 100% at 50% 0%, rgba(0,209,255,.35), rgba(124,77,255,.35));
-  display:grid;place-items:center;font-weight:800;font-size:18px;box-shadow:inset 0 0 10px rgba(124,77,255,.35)
+  display:grid;place-items:center;font-weight:900;font-size:18px;box-shadow:inset 0 0 14px rgba(124,77,255,.35), 0 6px 20px rgba(0,0,0,.45)
 }
 .row{display:flex;gap:10px}
 .btn{
-  appearance:none;border:none;cursor:pointer;padding:12px 16px;border-radius:12px;font-weight:800;
-  background:linear-gradient(90deg,var(--brand1),var(--brand2));color:#0a1020;width:100%;box-shadow:0 8px 20px rgba(0,0,0,.35)
+  appearance:none;border:none;cursor:pointer;padding:12px 16px;border-radius:12px;font-weight:900;letter-spacing:.2px;
+  background:linear-gradient(90deg,#ffdb70,#ff9b4d 45%,#ff5aa4);color:#24110b;width:100%;
+  text-shadow:0 1px 0 #fff7; box-shadow:0 10px 26px rgba(0,0,0,.5)
 }
-.btn.secondary{background:#1a1f4a;color:var(--text);border:1px solid var(--border);font-weight:700}
+.btn.secondary{background:#1a214e;color:#e6e9ff;border:1px solid #2a316b;text-shadow:none}
 .btn:disabled{opacity:.55;cursor:not-allowed}
-.btn.ok{background:var(--ok);color:#0b0f1e}
-.btn.play{background:linear-gradient(90deg,#ffd166,#ff7ab6);color:#0a1020}
+.btn.ok{background:linear-gradient(90deg,#4dffb3,#12e57c);color:#072015;text-shadow:0 1px 0 #d9ffe6}
+.btn.play{background:linear-gradient(90deg,#ffd166,#ff7ab6);color:#1b0a12}
 
-/* persuasive block */
-.promo{
-  display:flex;align-items:flex-start;gap:12px;margin-top:12px;padding:14px;border:1px dashed var(--border);border-radius:12px;
-  background:linear-gradient(180deg,rgba(255,204,0,.06),rgba(0,0,0,0))
-}
-.promo.expired{border-color:rgba(255,107,107,.5);background:linear-gradient(180deg,rgba(255,107,107,.07),rgba(0,0,0,0))}
+/* bloque persuasivo */
+.promo{display:flex;align-items:flex-start;gap:12px;margin-top:12px;padding:14px;border:1px dashed #2a2f67;border-radius:12px;background:linear-gradient(180deg,rgba(255,204,0,.06),rgba(0,0,0,0))}
+.promo.expired{border-color:rgba(255,107,107,.55);background:linear-gradient(180deg,rgba(255,107,107,.07),rgba(0,0,0,0))}
 .promo .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:6px}
 .promo.expired .dot{background:var(--danger)}
 .promo small{color:var(--muted)}
 
 /* toast & confetti */
-.toast{
-  position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
-  background:#10162c;color:#e8ebff;border:1px solid var(--border);
-  border-radius:10px;padding:10px 14px;font-size:14px;opacity:0;transition:.25s;box-shadow:0 10px 30px rgba(0,0,0,.45);z-index:60
-}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#0e1433;color:#e8ebff;border:1px solid #242b62;border-radius:10px;padding:10px 14px;font-size:14px;opacity:0;transition:.25s;box-shadow:0 12px 30px rgba(0,0,0,.5);z-index:60}
 .toast.show{opacity:1}
 .confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
-.confetti i{position:absolute;width:10px;height:14px;opacity:0;top:-20px;border-radius:2px;
-  animation:drop 1.6s linear forwards;transform:rotate(360deg)}
+.confetti i{position:absolute;width:10px;height:14px;opacity:0;top:-20px;border-radius:2px;animation:drop 1.6s linear forwards;transform:rotate(360deg)}
 @keyframes drop{8%{opacity:1}100%{transform:translateY(110vh) rotate(360deg);opacity:0}}
 
-/* floating WhatsApp CTA */
+/* floating WA con logo */
 .fab{
   position:fixed;right:16px;bottom:16px;z-index:70;
-  background:var(--ok);color:#0b0f1e;border:none;border-radius:999px;padding:12px 16px;font-weight:900;
-  display:flex;align-items:center;gap:8px;box-shadow:0 12px 30px rgba(0,0,0,.45)
+  background:#25D366;border:none;border-radius:999px;
+  padding:14px 18px;display:flex;align-items:center;gap:10px;
+  box-shadow:0 16px 40px rgba(0,0,0,.55);cursor:pointer;
 }
-.fab span{display:none}
-@media(min-width:420px){.fab span{display:inline}}
+.fab img.wa-icon{
+  width:34px;height:34px;display:block;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.35));
+}
+.fab span{font-weight:900;color:#0b0f1e;text-shadow:0 1px 0 #fff9}
+@media(max-width:420px){
+  .fab span{display:none}          /* móvil: solo el logo */
+  .fab img.wa-icon{width:46px;height:46px} /* logo más grande en móvil */
+}
 .fab:disabled{opacity:.6;cursor:not-allowed}
 </style>
 </head>
 <body>
-<img class="bg" src="img/bg-casino.webp" alt="" />
+
+<!-- decor monedas -->
+<div class="coin" style="left:8%; animation-delay:0s"></div>
+<div class="coin" style="left:78%; animation-delay:1.2s"></div>
+<div class="coin" style="left:55%; animation-delay:.6s"></div>
+
 <div id="confetti" class="confetti" aria-hidden="true"></div>
 <div id="toast" class="toast">Ya usaste tu giro de hoy</div>
 
 <div class="container">
   <div class="card">
     <div class="head">
-      <img class="brand" src="img/logo-bet300.svg" alt="BET300" onerror="this.outerHTML='<strong>BET300</strong>'">
-      <span class="pill" id="topMsg">Promo interactiva · válida <b id="today"></b></span>
-      <span class="pill time">⏳ Tiempo limitado <span class="badgeTime" id="countdown">--:--</span></span>
+      <div class="logo">BET300</div>
+      <span class="neon">Promo interactiva · válida <b id="today"></b></span>
+      <span class="neon">⏳ Tiempo limitado <span class="count" id="countdown">--:--</span></span>
     </div>
 
     <div class="grid">
       <!-- WHEEL -->
       <div class="panel">
         <div class="stage">
-          <img src="img/glow-frame.svg" alt="" style="position:absolute;inset:0;margin:auto;width:100%;max-width:520px;opacity:.8;pointer-events:none">
-          <div class="wrap"><canvas id="wheel" width="620" height="620"></canvas></div>
+          <img class="wheel-halo" src="img/glow-frame.svg" alt="">
+          <div class="wrap"><canvas id="wheel" width="640" height="640"></canvas></div>
           <div class="pointer" aria-hidden="true"></div>
         </div>
       </div>
@@ -158,7 +186,7 @@ h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px}
         </div>
 
         <div class="row" style="margin-top:8px">
-          <button id="spinBtn" class="btn">🎯 Girar ahora</button>
+          <button id="spinBtn" class="btn">🎰 Girar ahora</button>
           <button id="resetBtn" class="btn secondary" title="Solo pruebas locales">Reiniciar</button>
         </div>
 
@@ -167,8 +195,8 @@ h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px}
         <div class="promo" id="promoBox">
           <span class="dot" aria-hidden="true"></span>
           <div style="flex:1">
-            <strong>Bonos especiales por tiempo limitado.</strong><br>
-            <small>Accedé ahora y reclamá tu beneficio antes de que expire.</small>
+            <strong>Beneficio por tiempo limitado.</strong><br>
+            <small>Entrá ahora y reclamá antes de que termine el contador.</small>
           </div>
           <button id="playNow" class="btn play" style="margin-left:auto;padding:10px 14px;white-space:nowrap">🎮 Entrar a la plataforma</button>
         </div>
@@ -177,8 +205,11 @@ h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px}
   </div>
 </div>
 
-<!-- Floating WA -->
-<button id="fabWA" class="fab" disabled>💬 <span>Ayuda inmediata</span></button>
+<!-- Floating WA con logo grande -->
+<button id="fabWA" class="fab" disabled>
+  <img src="img/logo-wa.svg" alt="WhatsApp" class="wa-icon">
+  <span>Chatear ahora</span>
+</button>
 
 <script>
 /* ========= Config ========= */
@@ -186,7 +217,7 @@ h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px}
 /* Premios intercalados: $ y % */
 const AMOUNTS = [2000,3000,4000,5000,6000,7000,8000,9000,10000];
 const PERCENTS = [10,20,30,40,50];
-const PRIZES = []; // mezcla intercalada
+const PRIZES = [];
 (function interleave(){
   const max = Math.max(AMOUNTS.length, PERCENTS.length);
   for (let i=0;i<max;i++){
@@ -195,24 +226,15 @@ const PRIZES = []; // mezcla intercalada
   }
 })();
 
-const COLORS  = ["#44e0ff","#7a5bff","#16e2b6","#ff6ad5","#ffd166","#4be1a0","#8ab6ff","#ff9bd1","#7cf7ad","#ffc6a5","#c7b2ff","#a7f0ff","#ffd6f0","#fff3a6"];
+/* paleta “casino” */
+const COLORS = ["#4df0ff","#7a5bff","#1ce9b8","#ff6ad5","#ffd166","#4be1a0","#8ab6ff","#ff9bd1","#7cf7ad","#ffc6a5","#c7b2ff","#a7f0ff","#ffd6f0","#fff3a6"];
 
 /* WhatsApp por PC */
-const WP_NUMBERS = {
-  principal: "5491157737173",
-  pc1: "5491138601132",
-  pc2: "5491138214312",
-  pc3: "5491168392647"
-};
-const WP_MSG_TEMPLATE = "Hola! Quiero reclamar mi premio de la ruleta: %PRIZE%. Llegué desde %SOURCE%.";
+const WP_NUMBERS = { principal:"5491157737173", pc1:"5491138601132", pc2:"5491138214312", pc3:"5491168392647" };
+const WP_MSG_TEMPLATE = "Hola! Quiero reclamar mi premio: %PRIZE%. Llegué desde %SOURCE%.";
 
-/* Plataforma por PC (opcional) */
-const PLATFORM_LINKS = {
-  principal: "https://plataforma.example/inicio",
-  pc1: "https://c01.bet300vip.com/",
-  pc2: "https://c02.bet300vip.com/",
-  pc3: "https://c03.bet300vip.com/"
-};
+/* Plataforma por PC */
+const PLATFORM_LINKS = { principal:"https://plataforma.example/inicio", pc1:"https://c01.bet300vip.com/", pc2:"https://c02.bet300vip.com/", pc3:"https://c03.bet300vip.com/" };
 
 /* ========= Estado/UI ========= */
 const wheel    = document.getElementById('wheel');
@@ -230,138 +252,133 @@ const playNow  = document.getElementById('playNow');
 const fabWA    = document.getElementById('fabWA');
 const todayEl  = document.getElementById('today');
 
-let angle = 0, spinning = false, cx,cy,r, cssW=0;
+let angle=0, spinning=false, cx,cy,r, cssW=0, rafId=null;
 
-/* Fecha de hoy */
-(function setToday(){
-  const d = new Date();
-  const fmt = new Intl.DateTimeFormat('es-AR',{day:'2-digit',month:'2-digit'}).format(d);
-  todayEl.textContent = "hoy " + fmt;
-})();
+/* Fecha hoy */
+(function(){ const d=new Date(); const fmt=new Intl.DateTimeFormat('es-AR',{day:'2-digit',month:'2-digit'}).format(d);
+  const el=document.getElementById('today'); if(el) el.textContent="hoy "+fmt; })();
 
-/* Parámetros y selección de destino */
+/* Parámetros */
 const params = new URLSearchParams(location.search);
 const pc = params.get('pc');
 let WP = WP_NUMBERS.principal;
 if(pc==='1') WP = WP_NUMBERS.pc1 || WP;
 if(pc==='2') WP = WP_NUMBERS.pc2 || WP;
 if(pc==='3') WP = WP_NUMBERS.pc3 || WP;
-
 let PLATFORM = PLATFORM_LINKS.principal;
 if(pc==='1') PLATFORM = PLATFORM_LINKS.pc1 || PLATFORM;
 if(pc==='2') PLATFORM = PLATFORM_LINKS.pc2 || PLATFORM;
 if(pc==='3') PLATFORM = PLATFORM_LINKS.pc3 || PLATFORM;
-playNow.onclick = ()=> window.open(PLATFORM, '_blank', 'noopener');
+playNow.onclick = ()=> window.open(PLATFORM,'_blank','noopener');
 
-/* Construye mensaje WA con UTM/source */
 function waMessageFor(prizeText){
   const source = (params.get('utm_source')||'meta').toUpperCase();
   return WP_MSG_TEMPLATE.replace('%PRIZE%', prizeText).replace('%SOURCE%', source);
 }
 
-/* Canvas responsive */
-function getWrapWidth(){
-  const wrap = document.querySelector('.wrap');
-  if (wrap) return Math.floor(wrap.getBoundingClientRect().width);
-  return Math.floor(window.innerWidth * 0.95);
-}
+/* responsive */
+function getWrapWidth(){ const wrap=document.querySelector('.wrap'); return wrap? Math.floor(wrap.getBoundingClientRect().width): Math.floor(window.innerWidth*.95); }
 function setSize(){
-  const dpr = devicePixelRatio || 1;
-  const w = Math.min(520, Math.max(280, getWrapWidth()));
-  cssW = w;
-  wheel.width  = Math.floor(w*dpr);
-  wheel.height = Math.floor(w*dpr);
-  wheel.style.width  = w+'px';
-  wheel.style.height = w+'px';
-  ctx.setTransform(dpr,0,0,dpr,0,0);
-  cx = wheel.width/dpr/2; cy = wheel.height/dpr/2; r = Math.min(cx,cy) - 10;
-  draw(angle);
+  const dpr=devicePixelRatio||1; const w=Math.min(560, Math.max(280,getWrapWidth())); cssW=w;
+  wheel.width=Math.floor(w*dpr); wheel.height=Math.floor(w*dpr); wheel.style.width=w+'px'; wheel.style.height=w+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0); cx=wheel.width/dpr/2; cy=wheel.height/dpr/2; r=Math.min(cx,cy)-12;
+  draw(angle,performance.now());
 }
-window.addEventListener('resize', ()=>{ clearTimeout(window.__wTo); window.__wTo=setTimeout(setSize,120) });
+addEventListener('resize', ()=>{ clearTimeout(window.__wTo); window.__wTo=setTimeout(setSize,120) });
 
-/* Dibujo ruleta */
-function draw(a){
+/* ========= Dibujo ruleta y luces ========== */
+function draw(a,t){
   ctx.clearRect(0,0,wheel.width,wheel.height);
-  const n = PRIZES.length; const arc = Math.PI*2/n;
+  const n=PRIZES.length, arc=Math.PI*2/n;
 
-  const labelFont =
-    cssW <= 340 ? "800 20px system-ui,-apple-system,Segoe UI" :
-    cssW <= 380 ? "800 24px system-ui,-apple-system,Segoe UI" :
-    cssW <= 440 ? "800 28px system-ui,-apple-system,Segoe UI" :
-                  "800 32px system-ui,-apple-system,Segoe UI";
+  // aro metálico
+  const rimOuter=r, rimInner=r-16;
+  const grad=ctx.createLinearGradient(cx-r,cy-r,cx+r,cy+r);
+  grad.addColorStop(0,'#f7f7ff'); grad.addColorStop(.5,'#c9d2ff'); grad.addColorStop(1,'#eef1ff');
+  ctx.beginPath(); ctx.arc(cx,cy,rimOuter,0,Math.PI*2); ctx.arc(cx,cy,rimInner,0,Math.PI*2,true); ctx.closePath();
+  ctx.fillStyle=grad; ctx.fill();
+  ctx.shadowColor='rgba(0,0,0,.35)'; ctx.shadowBlur=12;
 
+  // segmentos
+  const wheelR=r-18, wheelInset=14;
+  const labelFont = cssW<=340? "900 20px system-ui,-apple-system,Segoe UI" :
+                     cssW<=380? "900 24px system-ui,-apple-system,Segoe UI" :
+                     cssW<=440? "900 28px system-ui,-apple-system,Segoe UI" : "900 32px system-ui,-apple-system,Segoe UI";
   for(let i=0;i<n;i++){
-    const s = a + i*arc, e = s + arc;
-    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,s,e); ctx.closePath();
-    ctx.fillStyle = COLORS[i % COLORS.length]; ctx.fill();
-    ctx.strokeStyle = "rgba(10,15,35,.35)"; ctx.lineWidth = 2; ctx.stroke();
+    const s=a+i*arc, e=s+arc;
+    ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,wheelR,s,e); ctx.closePath();
+    ctx.fillStyle=COLORS[i%COLORS.length]; ctx.fill();
+    ctx.strokeStyle="rgba(6,10,26,.5)"; ctx.lineWidth=1.8; ctx.stroke();
 
-    const p = PRIZES[i];
-    const label = p.type==='%' ? (p.value+"%") : ("$"+p.value.toLocaleString("es-AR"));
-    ctx.save(); ctx.translate(cx,cy); ctx.rotate(s + arc/2);
-    ctx.textAlign="right"; ctx.fillStyle="#091024"; ctx.font = labelFont;
-    ctx.fillText(label, r-18, 12); ctx.restore();
+    const p=PRIZES[i]; const label=p.type==='%'? (p.value+"%") : ("$"+p.value.toLocaleString("es-AR"));
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(s+arc/2);
+    ctx.textAlign="right"; ctx.fillStyle="#0a1028"; ctx.font=labelFont;
+    ctx.fillText(label, wheelR-wheelInset, 12); ctx.restore();
   }
 
   // centro
-  const rCenter =
-    cssW <= 360 ? Math.max(26, r * 0.085) :
-    cssW <= 420 ? Math.max(30, r * 0.095) :
-                  Math.max(34, r * 0.105);
-  const centerStroke = Math.max(2, Math.round(rCenter * 0.08));
-  ctx.beginPath(); ctx.arc(cx, cy, rCenter, 0, Math.PI*2);
-  ctx.fillStyle = "#0e1230"; ctx.fill();
-  ctx.strokeStyle = "rgba(124,77,255,.6)"; ctx.lineWidth = centerStroke; ctx.stroke();
-}
+  const centerR = Math.max(34, (r*0.11));
+  ctx.shadowBlur=0;
+  ctx.beginPath(); ctx.arc(cx,cy,centerR,0,Math.PI*2); ctx.fillStyle="#0b1034"; ctx.fill();
+  const cgrad=ctx.createRadialGradient(cx,cy-6,6,cx,cy,centerR);
+  cgrad.addColorStop(0,'rgba(22,241,255,.45)'); cgrad.addColorStop(1,'rgba(22,241,255,0)');
+  ctx.beginPath(); ctx.arc(cx,cy,centerR+10,0,Math.PI*2); ctx.fillStyle=cgrad; ctx.fill();
 
-/* Helper ángulos */
-const TWO_PI = Math.PI*2;
-const pointerAngle = Math.PI * 1.5;
-const norm = rad => ((rad % TWO_PI) + TWO_PI) % TWO_PI;
-function winnerIndexByAngle(a){
-  const n = PRIZES.length;
-  const arc = TWO_PI / n;
-  let bestIdx = 0, bestDist = Infinity;
-  for(let i=0;i<n;i++){
-    const center = norm(a + i*arc + arc/2);
-    let diff = Math.abs(norm(center - pointerAngle));
-    if (diff > Math.PI) diff = TWO_PI - diff;
-    if (diff < bestDist){ bestDist = diff; bestIdx = i; }
+  // luces marquesina
+  const bulbs=48, radius=r-8; const speed= (t||0)/340;
+  for(let i=0;i<bulbs;i++){
+    const th = i*(Math.PI*2/bulbs);
+    const x = cx + radius*Math.cos(th), y = cy + radius*Math.sin(th);
+    const phase = (i/3 + speed)%1;
+    const on = phase<.5;
+    ctx.beginPath(); ctx.arc(x,y, on?4.2:3.2, 0, Math.PI*2);
+    ctx.fillStyle = on? 'rgba(255,241,180,.95)' : 'rgba(255,220,120,.35)';
+    ctx.fill();
   }
-  return bestIdx;
 }
 
-/* Animación */
+/* animación continua para luces */
+let rafId=null;
+function startMarquee(){
+  cancelAnimationFrame(rafId);
+  const loop=(ts)=>{ draw(angle,ts); rafId=requestAnimationFrame(loop); };
+  rafId=requestAnimationFrame(loop);
+}
+startMarquee();
+
+/* Helpers ángulos */
+const TWO_PI=Math.PI*2, pointerAngle=Math.PI*1.5, norm=rad=> ((rad%TWO_PI)+TWO_PI)%TWO_PI;
+function winnerIndexByAngle(a){
+  const n=PRIZES.length, arc=TWO_PI/n;
+  let best=0, dist=Infinity;
+  for(let i=0;i<n;i++){
+    const center=norm(a+i*arc+arc/2); let d=Math.abs(norm(center-pointerAngle));
+    if(d>Math.PI) d=TWO_PI-d; if(d<dist){dist=d; best=i;}
+  } return best;
+}
+
+/* Animación de giro */
 function animateTo(target, ms, cb){
-  const start = performance.now(); const from = angle;
+  const start=performance.now(), from=angle;
   (function loop(t){
-    const k = Math.min(1,(t-start)/ms);
-    const ease = 1 - Math.pow(1-k,3);
-    angle = from + (target-from)*ease; draw(angle);
+    const k=Math.min(1,(t-start)/ms), ease=1-Math.pow(1-k,3);
+    angle=from+(target-from)*ease;
     if(k<1) requestAnimationFrame(loop); else cb&&cb();
   })(start);
 }
 
-/* Sonidos (sin archivos externos) */
+/* Sonidos simples */
 let audioCtx;
-function spinSound(){
-  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-  o.type="triangle"; o.frequency.value=420;
-  g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime+0.05);
-  g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+0.8);
-  o.connect(g).connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+0.8);
+function spinSound(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type="triangle"; o.frequency.value=420;
+  g.gain.setValueAtTime(0.0001,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.12,audioCtx.currentTime+.05);
+  g.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+.8); o.connect(g).connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+.8);
 }
-function winSound(){
-  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-  o.type="sine"; o.frequency.setValueAtTime(660, audioCtx.currentTime);
-  o.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime+0.25);
-  g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.18, audioCtx.currentTime+0.03);
-  g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+0.5);
-  o.connect(g).connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+0.5);
+function winSound(){ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type="square"; o.frequency.setValueAtTime(740,audioCtx.currentTime);
+  o.frequency.exponentialRampToValueAtTime(988,audioCtx.currentTime+.22);
+  g.gain.setValueAtTime(0.0001,audioCtx.currentTime); g.gain.exponentialRampToValueAtTime(0.2,audioCtx.currentTime+.02);
+  g.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+.5); o.connect(g).connect(audioCtx.destination); o.start(); o.stop(audioCtx.currentTime+.5);
 }
 
 /* Giro */
@@ -370,109 +387,80 @@ spinBtn.addEventListener('click', ()=>{
   if(isExpired()){ showToast("La promoción finalizó"); return; }
   if(localStorage.getItem('spin_done')==='1'){ showToast("Ya usaste tu giro de hoy"); return; }
 
-  spinning = true; spinBtn.disabled = true; claimBtn.disabled = true;
-  spinSound();
-
-  const extraTurns   = 5 + Math.random()*1.5;      // 5-6.5 vueltas
-  const randomOffset = Math.random() * TWO_PI;     // 0–360°
-  const final        = angle + (TWO_PI*extraTurns) + randomOffset;
-
+  spinning=true; spinBtn.disabled=true; claimBtn.disabled=true; spinSound();
+  const extra=5+Math.random()*1.5, offset=Math.random()*TWO_PI, final=angle+(TWO_PI*extra)+offset;
   animateTo(final, 3200, ()=>{
-    angle = final;
-    const idx = winnerIndexByAngle(angle);
-    const prize = PRIZES[idx];
-    setWon(prize);
-    localStorage.setItem('spin_done','1');
-    localStorage.setItem('spin_prize', JSON.stringify(prize));
-    spinning = false;
+    angle=final; const idx=winnerIndexByAngle(angle); const prize=PRIZES[idx];
+    setWon(prize); localStorage.setItem('spin_done','1'); localStorage.setItem('spin_prize', JSON.stringify(prize)); spinning=false;
   });
 });
 
 /* Premio */
-function prizeText(p){ return p.type==='%' ? (p.value+"% extra") : ("$"+p.value.toLocaleString("es-AR")+" en fichas"); }
+function prizeText(p){ return p.type==='%'? (p.value+"% extra") : ("$"+p.value.toLocaleString("es-AR")+" en fichas"); }
 function setWon(prize){
   winSound();
-  const txt = prizeText(prize);
-  badge.textContent = (prize.type==='%'? (prize.value+"%") : ("$"+prize.value.toLocaleString("es-AR")));
-  titleEl.textContent = "🎉 ¡Premio obtenido!";
-  subtitle.innerHTML = `Recibís <b>${txt}</b> con tu próxima carga.`;
-  claimBtn.disabled = false; fabWA.disabled=false;
+  const txt=prizeText(prize);
+  badge.textContent = (prize.type==='%'? (prize.value+"%"):("$"+prize.value.toLocaleString("es-AR")));
+  titleEl.textContent="🎉 ¡Premio obtenido!";
+  subtitle.innerHTML=`Recibís <b>${txt}</b> con tu próxima carga.`;
+  claimBtn.disabled=false; fabWA.disabled=false;
 
-  const msg = waMessageFor(txt);
-  const urlMsg = encodeURIComponent(msg + utmFromQuery());
-  claimBtn.onclick = ()=> location.href = `https://wa.me/${WP}?text=${urlMsg}`;
-  fabWA.onclick    = ()=> location.href = `https://wa.me/${WP}?text=${urlMsg}`;
-
+  const msg=waMessageFor(txt), urlMsg=encodeURIComponent(msg+utmFromQuery());
+  claimBtn.onclick=()=> location.href=`https://wa.me/${WP}?text=${urlMsg}`;
+  fabWA.onclick=()=> location.href=`https://wa.me/${WP}?text=${urlMsg}`;
   confettiBurst();
 }
 
-/* UTM passthrough a WA */
+/* UTM passthrough */
 function utmFromQuery(){
-  const pass = [];
-  ['utm_source','utm_medium','utm_campaign','utm_adset','utm_content'].forEach(k=>{
-    if(params.get(k)) pass.push(`${k}=${params.get(k)}`);
-  });
-  return pass.length ? ` (${pass.join('&')})` : '';
+  const pass=[]; ['utm_source','utm_medium','utm_campaign','utm_adset','utm_content'].forEach(k=>{ if(params.get(k)) pass.push(`${k}=${params.get(k)}`) });
+  return pass.length?` (${pass.join('&')})`:'';
 }
 
-/* Reset (solo test) */
-resetBtn.addEventListener('click', ()=>{
-  localStorage.removeItem('spin_done');
-  localStorage.removeItem('spin_prize');
-  angle=0; draw(angle);
-  badge.textContent='-';
-  titleEl.textContent="Tenés 1 giro disponible";
-  subtitle.innerHTML='Los premios se acreditan con tu <b>próxima carga mínima</b>.';
-  claimBtn.disabled=true; fabWA.disabled=true; spinBtn.disabled=false;
+/* Reset pruebas */
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  localStorage.removeItem('spin_done'); localStorage.removeItem('spin_prize'); angle=0;
+  badge.textContent='-'; titleEl.textContent="Tenés 1 giro disponible"; subtitle.innerHTML='Los premios se acreditan con tu <b>próxima carga mínima</b>.';
+  claimBtn.disabled=true; fabWA.disabled=false; spinBtn.disabled=false;
 });
 
 /* UI utils */
-function showToast(msg){ toast.textContent=msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'), 1800); }
+function showToast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),1800); }
 function confettiBurst(){
-  confetti.innerHTML='';
-  const n = 28;
-  for(let i=0;i<n;i++){
-    const p = document.createElement('i');
-    p.style.left = (Math.random()*100)+'vw';
-    p.style.animationDelay = (Math.random()*0.5)+'s';
-    p.style.background = Math.random()<.5 ? 'linear-gradient(#80ffea,#4e9cff)' : 'linear-gradient(#ffd166,#ff3d7f)';
-    confetti.appendChild(p);
-  }
+  confetti.innerHTML=''; const n=30;
+  for(let i=0;i<n;i++){ const p=document.createElement('i'); p.style.left=(Math.random()*100)+'vw'; p.style.animationDelay=(Math.random()*0.5)+'s';
+    p.style.background=Math.random()<.5? 'linear-gradient(#80ffea,#4e9cff)' : 'linear-gradient(#ffd166,#ff3d7f)'; confetti.appendChild(p); }
   setTimeout(()=> confetti.innerHTML='', 1800);
 }
 
-/* Deadline fijo 23:59 local */
-const DEADLINE_KEY = 'promo_end_ts';
+/* Deadline 23:59 local (persistente por día) */
+const DEADLINE_KEY='promo_end_ts';
 function computeToday2359(){
-  const now = new Date();
-  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 0, 0);
-  return (end.getTime() > now.getTime()) ? end.getTime() : new Date(now.getFullYear(), now.getMonth(), now.getDate()+1, 23, 59, 0, 0).getTime();
+  const now=new Date();
+  const end=new Date(now.getFullYear(),now.getMonth(),now.getDate(),23,59,0,0);
+  return (end.getTime()>now.getTime())? end.getTime() : new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,23,59,0,0).getTime();
 }
 function getOrInitDeadline(){
-  const saved = parseInt(localStorage.getItem(DEADLINE_KEY)||'0',10);
-  const now = Date.now();
-  if(saved && saved > now) return saved;
-  const end = computeToday2359();
+  const saved=parseInt(localStorage.getItem(DEADLINE_KEY)||'0',10);
+  const now=Date.now();
+  if(saved && saved>now) return saved;
+  const end=computeToday2359();
   localStorage.setItem(DEADLINE_KEY, String(end));
   return end;
 }
 function remainingMs(){ return Math.max(0, getOrInitDeadline() - Date.now()); }
-function isExpired(){ return remainingMs() <= 0; }
+function isExpired(){ return remainingMs()<=0; }
 function formatClock(ms){
-  const total = Math.floor(ms/1000);
-  const h = Math.floor(total/3600);
-  const m = Math.floor((total%3600)/60);
-  const s = total%60;
-  return (h>0)? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const tot=Math.floor(ms/1000), h=Math.floor(tot/3600), m=Math.floor((tot%3600)/60), s=tot%60;
+  return (h>0)?`${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 function tickCountdown(){
-  const ms = remainingMs();
-  countdownEl.textContent = formatClock(ms);
-  if(ms <= 0){
+  const ms=remainingMs(); countdownEl.textContent=formatClock(ms);
+  if(ms<=0){
     document.getElementById('promoBox').classList.add('expired');
-    spinBtn.disabled = true; fabWA.disabled=false;
-    titleEl.textContent = "⏱️ Oferta finalizada";
-    subtitle.innerHTML = `Se habilitarán nuevos giros próximamente.`;
+    spinBtn.disabled=true; fabWA.disabled=false;
+    titleEl.textContent="⏱️ Oferta finalizada";
+    subtitle.innerHTML=`Se habilitarán nuevos giros próximamente.`;
     return true;
   }
   return false;
@@ -481,22 +469,16 @@ function tickCountdown(){
 /* Init */
 setSize();
 tickCountdown();
-const __interval = setInterval(()=>{ if(tickCountdown()) clearInterval(__interval); },1000);
+const __interval=setInterval(()=>{ if(tickCountdown()) clearInterval(__interval); }, 1000);
 
 /* recuperar premio si ya existía */
-const saved = localStorage.getItem('spin_prize');
-if(saved){
-  try{
-    const prize = JSON.parse(saved);
-    setWon(prize);
-  }catch{}
-}
+const saved=localStorage.getItem('spin_prize'); if(saved){ try{ setWon(JSON.parse(saved)); }catch{} }
 
-/* Primera carga: habilitar WA flotante con msg neutro */
-(function initWA(){
-  const msg = encodeURIComponent("Hola! Tengo una consulta sobre la promo.");
-  fabWA.onclick = ()=> location.href = `https://wa.me/${WP}?text=${msg}`;
-  fabWA.disabled = false;
+/* WA flotante (mensaje neutro por si aún no hay premio) */
+(function(){
+  const msg=encodeURIComponent("Hola! Tengo una consulta sobre la promo.");
+  fabWA.onclick=()=> location.href=`https://wa.me/${WP}?text=${msg}`;
+  fabWA.disabled=false;
 })();
 </script>
 </body>
