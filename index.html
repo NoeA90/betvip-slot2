@@ -1,273 +1,247 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>BET300 · Promo interactiva</title>
-<style>
-  :root{
-    --bg:#070c1a;
-    --card:#0f1730;
-    --chip:#1a2447;
-    --text:#eaf1ff;
-    --accent:#4dd3a6;
-    --accent2:#ff5964;
-    --ring:#d8e7ff;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:radial-gradient(1200px 500px at 50% -100px,#0b1635 0,#070c1a 50%,#020614 100%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
-  .container{max-width:680px;margin:auto;padding:14px}
-  .toprow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .badge{background:linear-gradient(135deg,#ffc77e,#ff8aa8);color:#1c1020;padding:8px 14px;border-radius:16px;font-weight:800;letter-spacing:.5px}
-  .pill{background:linear-gradient(135deg,#222e57,#1c264a);padding:8px 14px;border-radius:16px;display:flex;gap:8px;align-items:center;font-weight:600;opacity:.95}
-  .cta-platform{margin-left:auto;background:linear-gradient(135deg,#2c7be5,#00d4ff);color:#071225;border:none;border-radius:14px;padding:8px 14px;font-weight:800;cursor:pointer;text-decoration:none;box-shadow:0 6px 20px rgba(0,212,255,.25)}
-  .panel{margin-top:14px;background:var(--card);border-radius:22px;padding:18px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
-  .stage{position:relative;display:flex;justify-content:center;align-items:center;aspect-ratio:1/1}
-  canvas{width:100%;height:auto;max-width:560px;display:block}
-  /* botón reclamo inferior */
-  .controls{position:sticky;bottom:0;left:0;right:0;background:linear-gradient(180deg,transparent,rgba(7,12,26,.75) 35%,rgba(7,12,26,.95));backdrop-filter:blur(8px);padding:14px 10px;margin:0 -10px}
-  .btns{display:flex;gap:12px}
-  .btn{flex:1;border:none;border-radius:14px;padding:14px 16px;font-size:18px;font-weight:800;cursor:pointer}
-  .btn-spin{background:linear-gradient(135deg,#ff8aa8,#ff5964);color:white;box-shadow:0 10px 20px rgba(255,89,100,.25)}
-  .btn-claim{background:#25d366;color:#03210f;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 10px 20px rgba(37,211,102,.28)}
-  .btn-claim.pulse{animation:pulse 1.6s infinite}
-  @keyframes pulse{
-    0%{transform:scale(1);box-shadow:0 0 0 0 rgba(37,211,102,.55)}
-    60%{transform:scale(1.06);box-shadow:0 0 0 20px rgba(37,211,102,0)}
-    100%{transform:scale(1);box-shadow:0 0 0 0 rgba(37,211,102,0)}
-  }
-  .result{display:flex;align-items:center;gap:14px}
-  .prizechip{min-width:86px;text-align:center;padding:14px;border-radius:16px;background:linear-gradient(135deg,#273a78,#2d1e74)}
-  .result h2{margin:0;font-size:28px}
-  .muted{opacity:.85}
-  /* que la ruleta nunca se corte */
-  .stage{padding:14px}
-  @media (min-width:760px){
-    .stage{padding:22px}
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BET300 - Promo Interactiva</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0a0f2c;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 20px;
+      background: linear-gradient(45deg,#ff7e5f,#feb47b);
+      padding: 5px 15px;
+      border-radius: 8px;
+      color:#000;
+    }
+    .tag {
+      background: linear-gradient(45deg,#141e30,#243b55);
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+    .countdown {
+      background:#222;
+      padding:6px 12px;
+      border-radius:12px;
+      margin:8px;
+      display:inline-block;
+      font-size:14px;
+    }
+    .sound-toggle {
+      background:#222;
+      padding:6px 12px;
+      border-radius:12px;
+      margin:8px;
+      display:inline-block;
+      font-size:14px;
+      cursor:pointer;
+    }
+    .wheel {
+      margin: 10px auto;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 10px solid #555;
+      position: relative;
+      overflow: hidden;
+      transition: transform 4s cubic-bezier(0.17,0.67,0.83,0.67);
+    }
+    .wheel .segment {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      background: #ff7e5f;
+      transform-origin: 100% 100%;
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      color:#000;
+    }
+    .indicator {
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 30px solid #00f7ff;
+      margin: 0 auto;
+    }
+    .result-box {
+      margin-top: 10px;
+      padding: 12px;
+      background: #111a3a;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+    .btn-container {
+      display: flex;
+      justify-content: space-around;
+      margin: 15px 0;
+    }
+    button {
+      flex: 1;
+      margin: 0 5px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-spin {
+      background: linear-gradient(45deg,#ff0844,#ffb199);
+      color: #fff;
+    }
+    .btn-claim {
+      background: linear-gradient(45deg,#00b09b,#96c93d);
+      color: #fff;
+    }
+    /* Botón flotante WhatsApp */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #25d366;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+      cursor: pointer;
+      animation: pulse 1.5s infinite;
+    }
+    .whatsapp-float img {
+      width: 35px;
+      height: 35px;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <div class="toprow">
-      <div class="badge">BET300</div>
-      <div class="pill">Promo interactiva · válida <b>&nbsp;hoy</b></div>
-      <div class="pill">⏳ <span id="timer">--:--</span></div>
-      <a id="platformLink" class="cta-platform" href="#" target="_blank" rel="noopener">Acceder a la plataforma</a>
-    </div>
+  <header>
+    <div class="logo">BET300</div>
+    <div class="tag">Promo interactiva · válida <b>hoy</b></div>
+  </header>
 
-    <div class="panel">
-      <div class="stage">
-        <canvas id="wheel" width="560" height="560"></canvas>
-      </div>
-    </div>
+  <div class="countdown">⏳ Tiempo limitado <span id="timer">--:--:--</span></div>
+  <div class="sound-toggle" onclick="toggleSound()">🔊 Sonido: <span id="soundStatus">ON</span></div>
 
-    <div class="panel">
-      <div class="result">
-        <div class="prizechip" id="prizeChip">-</div>
-        <div>
-          <h2 id="resultTitle">Tenés 1 giro disponible</h2>
-          <div class="muted" id="resultSub">Los premios se acreditan con tu <b>próxima carga mínima</b>.</div>
-        </div>
-      </div>
-    </div>
+  <div class="indicator"></div>
+  <div class="wheel" id="wheel"></div>
+
+  <div class="result-box" id="resultBox">Tenés 1 giro disponible<br>Los premios se acreditan con tu <b>próxima carga mínima</b>.</div>
+
+  <div class="btn-container">
+    <button class="btn-spin" onclick="spinWheel()">🎰 Girar</button>
+    <button class="btn-claim" onclick="claimPrize()">📲 Reclamar</button>
   </div>
 
-  <div class="controls">
-    <div class="btns">
-      <button class="btn btn-spin" id="spinBtn">🎰 Girar</button>
-      <a class="btn btn-claim pulse" id="claimBtn" href="#" target="_blank" rel="noopener" aria-label="Reclamar por WhatsApp">
-        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-          <path fill="#075E54" d="M16 3C9.37 3 4 8.37 4 15c0 2.42.7 4.67 1.9 6.56L4 29l7.67-1.86C13.5 28.3 14.7 29 16 29c6.63 0 12-5.37 12-12S22.63 3 16 3z"/>
-          <path fill="#25D366" d="M11.59 8.66c-.28-.62-.58-.63-.85-.64-.22-.01-.47-.01-.72-.01s-.66.09-1 .5c-.34.4-1.31 1.28-1.31 3.11s1.34 3.61 1.53 3.86c.19.25 2.59 4.15 6.4 5.65 3.17 1.25 3.81 1 4.5.94.69-.06 2.22-.9 2.54-1.78.31-.88.31-1.64.22-1.79-.09-.16-.34-.25-.72-.44-.38-.19-2.22-1.09-2.56-1.22-.34-.13-.59-.19-.84.19-.25.38-.97 1.22-1.19 1.47-.22.25-.44.28-.81.09-.38-.19-1.6-.59-3.05-1.88-1.13-.99-1.89-2.21-2.12-2.59-.22-.38-.02-.58.17-.77.17-.17.38-.44.56-.66.19-.22.25-.38.38-.63.13-.25.06-.47-.03-.66-.09-.19-.84-2.15-1.19-2.97z"/>
-        </svg>
-        Reclamar
-      </a>
-    </div>
+  <!-- Botón flotante WhatsApp -->
+  <div class="whatsapp-float" id="waButton">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
   </div>
 
-  <!-- Sonidos -->
-  <audio id="sndSpin" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
-  <audio id="sndWin"  src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3" preload="auto"></audio>
+  <script>
+    const prizes = ["$2.000","$3.000","20%","$4.000","30%","$5.000","40%","$6.000","50%","$7.000","$8.000","$9.000","$10.000","10%"];
+    const wheel = document.getElementById("wheel");
 
-<script>
-/* =========================
-   1) Parámetros & mapeos
-========================= */
-const params = new URLSearchParams(location.search);
-const pcParam = (params.get('pc') || '').toLowerCase(); // ej: pc1, pc2…
-const forcePlatform = params.get('pl');                  // opcional: URL plataforma directa
+    // Dibujar segmentos
+    prizes.forEach((prize,i)=>{
+      const seg=document.createElement("div");
+      seg.className="segment";
+      seg.style.transform=`rotate(${(360/prizes.length)*i}deg) skewY(-${90-(360/prizes.length)}deg)`;
+      seg.style.background=i%2===0?"#7cf":"#fcf";
+      seg.innerHTML=prize;
+      wheel.appendChild(seg);
+    });
 
-// EDITÁ ESTE MAPA CON TUS DATOS
-const PC_MAP = {
-  pc1: { wa: '5491111111111', platform: 'https://tu-plataforma-1.com' },
-  pc2: { wa: '5492222222222', platform: 'https://tu-plataforma-2.com' },
-  pc3: { wa: '5493333333333', platform: 'https://tu-plataforma-3.com' }
-};
-// fallback (si no hay pc)
-const DEFAULT_WA = '5491100000000';
-const DEFAULT_PLATFORM = 'https://tusitio.com';
+    let isSpinning=false;
+    let currentRotation=0;
+    let soundOn=true;
+    const spinSound=new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
+    const winSound=new Audio("https://www.soundjay.com/human/sounds/applause-8.mp3");
 
-/* =========================
-   2) Enlaces dinámicos
-========================= */
-const platformLink = document.getElementById('platformLink');
-const claimBtn = document.getElementById('claimBtn');
+    function spinWheel(){
+      if(isSpinning)return;
+      isSpinning=true;
+      const spinAngle=360*5+Math.floor(Math.random()*360);
+      currentRotation+=spinAngle;
+      wheel.style.transform=`rotate(${currentRotation}deg)`;
+      if(soundOn) spinSound.play();
+      setTimeout(()=>{
+        const normalized=(currentRotation%360+360)%360;
+        const segAngle=360/prizes.length;
+        const index=Math.floor((prizes.length-(normalized/segAngle))%prizes.length);
+        const result=prizes[index];
+        document.getElementById("resultBox").innerHTML=`🎉 ¡Premio obtenido!<br>Recibís <b>${result}</b> en tu próxima carga.`;
+        if(soundOn) winSound.play();
+        isSpinning=false;
+      },4000);
+    }
 
-const mapItem = PC_MAP[pcParam] || {};
-const waNumber = mapItem.wa || DEFAULT_WA;
-const platformUrl = forcePlatform || mapItem.platform || DEFAULT_PLATFORM;
+    function toggleSound(){
+      soundOn=!soundOn;
+      document.getElementById("soundStatus").textContent=soundOn?"ON":"OFF";
+    }
 
-// set plataforma
-platformLink.href = platformUrl;
+    // Contador regresivo
+    let timeLeft=3600;
+    setInterval(()=>{
+      if(timeLeft<=0)return;
+      timeLeft--;
+      const h=String(Math.floor(timeLeft/3600)).padStart(2,"0");
+      const m=String(Math.floor((timeLeft%3600)/60)).padStart(2,"0");
+      const s=String(timeLeft%60).padStart(2,"0");
+      document.getElementById("timer").textContent=`${h}:${m}:${s}`;
+    },1000);
 
-// número WA se completa al ganar, para incluir premio en el texto
-let lastPrizeText = "";
+    // Configuración por parámetro ?pc=1,2,3
+    const params=new URLSearchParams(location.search);
+    const pc=params.get("pc");
 
-/* =========================
-   3) Temporizador simple
-========================= */
-(function startTimer(dur=3600){
-  let t=dur; const el=document.getElementById('timer');
-  setInterval(()=>{const m=String(Math.floor(t/60)).padStart(2,'0');const s=String(t%60).padStart(2,'0');el.textContent=`${m}:${s}`;t=t? t-1:dur;},1000);
-})();
+    const whatsappNumbers={
+      1:"5491111111111",
+      2:"5492222222222",
+      3:"5493333333333"
+    };
+    const platformLinks={
+      1:"https://plataforma1.com",
+      2:"https://plataforma2.com",
+      3:"https://plataforma3.com"
+    };
 
-/* =========================
-   4) Ruleta (canvas)
-========================= */
-const canvas = document.getElementById('wheel');
-const ctx = canvas.getContext('2d');
+    const waNum=whatsappNumbers[pc]||"5491111111111";
+    const plLink=platformLinks[pc]||"https://plataforma1.com";
 
-const slices = [
-  "$2.000","$3.000","20%","$4.000","30%","$5.000","40%",
-  "$6.000","50%","$7.000","$8.000","$9.000","$10.000","10%"
-];
-const colors = ["#9bd5ff","#fde74c","#9bc53d","#ffb0cb","#ffc77e","#9bd5ff","#fde74c","#9bc53d","#ffb0cb","#ffc77e","#9bd5ff","#fde74c","#9bc53d","#ffb0cb"];
-let arc = Math.PI*2/slices.length;
-let angle = 0;
-let spinning = false;
+    function claimPrize(){
+      window.open(`https://wa.me/${waNum}?text=¡Quiero reclamar mi premio!`,"_blank");
+    }
 
-function resizeCanvas(){
-  const max = Math.min(560, Math.min(window.innerWidth-28, 560));
-  canvas.width = max;
-  canvas.height = max;
-  draw();
-}
-window.addEventListener('resize', resizeCanvas);
-
-function draw(){
-  const R = canvas.width/2 - 34;   // margen generoso para luces
-  const rText = R - 42;
-  const rHole = 24;
-
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.save();
-  ctx.translate(canvas.width/2, canvas.height/2);
-  ctx.rotate(angle);
-
-  ctx.font = "bold 18px system-ui, Arial";
-  ctx.textBaseline="middle";
-  ctx.textAlign="center";
-
-  // slices
-  for(let i=0;i<slices.length;i++){
-    const a0 = i*arc, a1=a0+arc;
-    ctx.beginPath();
-    ctx.fillStyle = colors[i];
-    ctx.moveTo(0,0);
-    ctx.arc(0,0,R,a0,a1);
-    ctx.closePath(); ctx.fill();
-
-    ctx.save();
-    ctx.rotate(a0+arc/2);
-    ctx.fillStyle="#0b0f1a";
-    ctx.fillText(slices[i], 0, -rText);
-    ctx.restore();
-  }
-
-  // borde y centro
-  ctx.beginPath(); ctx.lineWidth=14; ctx.strokeStyle="#cfe3ff";
-  ctx.arc(0,0,R+18,0,Math.PI*2); ctx.stroke();
-
-  // luces
-  for(let i=0;i<36;i++){
-    const a = i*(Math.PI*2/36);
-    const x = Math.cos(a)*(R+10);
-    const y = Math.sin(a)*(R+10);
-    ctx.beginPath();
-    ctx.fillStyle = i%2? "#ffffff" : "#ffee88";
-    ctx.arc(x,y,6,0,Math.PI*2); ctx.fill();
-  }
-
-  // agujero central
-  ctx.beginPath(); ctx.fillStyle="#0b0f1a";
-  ctx.arc(0,0,rHole,0,Math.PI*2); ctx.fill();
-
-  ctx.restore();
-
-  // flecha
-  ctx.beginPath();
-  ctx.fillStyle="#4dd3ff";
-  const topY = 30;
-  ctx.moveTo(canvas.width/2-18, topY);
-  ctx.lineTo(canvas.width/2+18, topY);
-  ctx.lineTo(canvas.width/2, topY+26);
-  ctx.closePath(); ctx.fill();
-}
-
-const sndSpin = document.getElementById('sndSpin');
-const sndWin  = document.getElementById('sndWin');
-
-function spin(){
-  if(spinning) return;
-  spinning=true;
-  sndSpin.currentTime=0; sndSpin.play();
-
-  const spinMs = 4200 + Math.random()*1800;
-  const start = performance.now();
-  const startAngle = angle;
-  const endAngle = angle + (Math.PI*6) + Math.random()*Math.PI*2;
-
-  function tick(now){
-    const p = Math.min(1, (now-start)/spinMs);
-    // easeOutCubic
-    const e = 1 - Math.pow(1-p, 3);
-    angle = startAngle + (endAngle-startAngle)*e;
-    draw();
-    if(p<1) requestAnimationFrame(tick);
-    else finish();
-  }
-  requestAnimationFrame(tick);
-
-  function finish(){
-    sndWin.currentTime=0; sndWin.play();
-    spinning=false;
-
-    // calcular índice bajo la flecha
-    const degrees = (angle % (Math.PI*2)) * 180/Math.PI;
-    const normalized = (360 - (degrees+90)%360); // flecha arriba
-    const idx = Math.floor(normalized / (360/slices.length)) % slices.length;
-    lastPrizeText = slices[idx];
-
-    // UI
-    document.getElementById('prizeChip').textContent = lastPrizeText;
-    document.getElementById('resultTitle').textContent = "¡Premio obtenido!";
-    document.getElementById('resultSub').innerHTML = `Recibís <b>${lastPrizeText}</b> con tu próxima carga.`;
-
-    // armar link de WhatsApp con premio
-    const msg = encodeURIComponent(`¡Hola! Quiero reclamar mi premio ${lastPrizeText}.`);
-    claimBtn.href = `https://wa.me/${waNumber}?text=${msg}`;
-  }
-}
-
-document.getElementById('spinBtn').addEventListener('click', spin);
-
-// valor inicial del botón Reclamar (por si tocan antes de girar)
-claimBtn.href = `https://wa.me/${waNumber}?text=${encodeURIComponent('¡Hola! Quiero reclamar mi premio.')}`;
-
-// init
-resizeCanvas();
-draw();
-</script>
+    document.getElementById("waButton").onclick=function(){
+      window.open(`https://wa.me/${waNum}?text=¡Quiero reclamar mi premio!`,"_blank");
+    };
+  </script>
 </body>
 </html>
