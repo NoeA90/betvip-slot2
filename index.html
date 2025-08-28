@@ -33,26 +33,31 @@ h1,h2,h3,p{margin:0 0 8px}
 .pill{min-width:72px;height:44px;border-radius:12px;background:radial-gradient(100% 100% at 50% 0%, rgba(0,209,255,.35), rgba(124,77,255,.35));display:grid;place-items:center;font-weight:900;font-size:18px}
 .title-compact{font-weight:900;line-height:1.05;font-size:clamp(18px,4.8vw,28px);letter-spacing:.2px}
 .subtitle-compact{margin-top:2px}
-@media(min-width:561px){
-  .title-compact{font-size:28px}
-}
+@media(min-width:561px){ .title-compact{font-size:28px}}
+
+/* Botones */
 .row{display:flex;gap:10px}
 .btn{appearance:none;border:none;cursor:pointer;padding:12px 16px;border-radius:12px;font-weight:900;letter-spacing:.2px;background:linear-gradient(90deg,#ffdb70,#ff9b4d 45%,#ff5aa4);color:#24110b;width:100%;text-shadow:0 1px 0 #fff7;box-shadow:0 10px 26px rgba(0,0,0,.5)}
 .btn.secondary{background:#18204f;color:#e6e9ff;border:1px solid #2a316b;text-shadow:none}
 .btn.ok{background:linear-gradient(90deg,#4dffb3,#12e57c);color:#072015;text-shadow:0 1px 0 #d9ffe6}
 .btn:disabled{opacity:.55;cursor:not-allowed}
+
+/* Notas / Promo */
 .promo{display:flex;gap:10px;align-items:flex-start;margin-top:10px;padding:12px;border:1px dashed #2a2f67;border-radius:12px}
+
+/* Toast + confeti */
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#0e1433;border:1px solid #242b62;border-radius:10px;padding:10px 14px;font-size:14px;opacity:0;transition:.25s;box-shadow:0 12px 30px rgba(0,0,0,.5);z-index:60}
 .toast.show{opacity:1}
 .confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
 .confetti i{position:absolute;width:10px;height:14px;opacity:0;top:-20px;border-radius:2px;animation:drop 1.6s linear forwards}
 @keyframes drop{8%{opacity:1}100%{transform:translateY(110vh) rotate(360deg);opacity:0}}
-/* FAB WhatsApp */
+
+/* FAB WhatsApp (solo desktop) */
 .fab{position:fixed;right:14px;bottom:120px;z-index:70;background:#25D366;border:none;border-radius:999px;padding:12px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 16px 40px rgba(0,0,0,.55);cursor:pointer}
 .fab span{font-weight:900;color:#0b0f1e;text-shadow:0 1px 0 #fff9}
 .fab svg{width:36px;height:36px;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))}
-@media(max-width:430px){.fab span{display:none}.fab svg{width:46px;height:46px}}
-.fab:disabled{opacity:.6;cursor:not-allowed}
+@media(max-width:560px){ .fab{display:none} }
+
 /* Barra fija de acciones (móvil) */
 .sticky-cta{display:none}
 @media(max-width:560px){
@@ -60,8 +65,11 @@ h1,h2,h3,p{margin:0 0 8px}
   .sticky-inner{max-width:980px;margin:0 auto;padding:0 12px}
   .sticky-bar{background:#0b1030;border:1px solid #1d2353;border-radius:14px;box-shadow:0 14px 46px rgba(0,0,0,.55);padding:8px;display:flex;gap:8px}
   .sticky-bar .btn{padding:14px 12px;border-radius:10px;box-shadow:none}
+  /* Ocultar CTAs del panel en móvil para que no se dupliquen */
+  .inline-cta, .claim-inline { display:none !important; }
 }
-/* separador visual debajo del panel para que no tape nada */
+
+/* separador para que la barra no tape nada en móvil */
 .spacer{height:80px}
 @media(min-width:561px){.spacer{height:0}}
 </style>
@@ -99,12 +107,13 @@ h1,h2,h3,p{margin:0 0 8px}
           </div>
         </div>
 
-        <div class="row">
+        <!-- CTAs de panel (solo desktop) -->
+        <div class="row inline-cta">
           <button id="spinBtn" class="btn">🎰 Girar ahora</button>
           <button id="resetBtn" class="btn secondary" title="Solo pruebas locales">Reiniciar</button>
         </div>
 
-        <button id="claimBtn" class="btn ok" style="margin-top:10px" disabled>📲 Reclamar por WhatsApp</button>
+        <button id="claimBtn" class="btn ok claim-inline" style="margin-top:10px" disabled>📲 Reclamar por WhatsApp</button>
 
         <div class="promo">
           <div style="font-weight:700">⚡</div>
@@ -127,7 +136,7 @@ h1,h2,h3,p{margin:0 0 8px}
 
 <div class="spacer"></div>
 
-<!-- FAB WhatsApp -->
+<!-- FAB WhatsApp (no se muestra en móvil) -->
 <button id="fabWA" class="fab" disabled aria-label="WhatsApp">
   <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 3C9.37 3 4 8.37 4 15c0 2.24.63 4.34 1.73 6.12L4 29l8.13-1.69A11.9 11.9 0 0 0 16 27c6.63 0 12-5.37 12-12S22.63 3 16 3zm0 22.5c-1.72 0-3.35-.45-4.78-1.23l-.34-.19-4.3.9.88-4.2-.2-.35A9.45 9.45 0 0 1 6.5 15c0-5.24 4.26-9.5 9.5-9.5s9.5 4.26 9.5 9.5-4.26 9.5-9.5 9.5zm5.28-6.32c-.29-.15-1.7-.84-1.97-.93-.27-.1-.47-.15-.68.15-.2.29-.78.93-.95 1.12-.18.2-.35.22-.64.07-.29-.15-1.22-.45-2.32-1.43-.86-.76-1.44-1.7-1.6-1.99-.17-.29-.02-.45.13-.6.14-.14.29-.36.43-.54.15-.18.2-.29.29-.49.1-.2.05-.37-.02-.52-.07-.15-.68-1.64-.93-2.25-.24-.58-.49-.5-.68-.5-.18 0-.37-.02-.57-.02-.2 0-.52.07-.79.37-.27.29-1.04 1.02-1.04 2.49s1.07 2.88 1.22 3.08c.15.2 2.1 3.19 5.09 4.37.71.31 1.26.49 1.69.63.71.23 1.35.2 1.86.12.57-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.34z"/></svg>
   <span>Chatear ahora</span>
@@ -151,7 +160,6 @@ const titleEl=document.getElementById('title'), subtitle=document.getElementById
 const countdownEl=document.getElementById('countdown'), toast=document.getElementById('toast');
 const confetti=document.getElementById('confetti'), fabWA=document.getElementById('fabWA');
 const mSpin=document.getElementById('mSpin'), mClaim=document.getElementById('mClaim');
-const stickyCta=document.getElementById('stickyCta');
 const sndBadge=document.getElementById('sndBadge');
 const params=new URLSearchParams(location.search);
 const pc=params.get('pc');
@@ -207,16 +215,28 @@ function onSpin(){
   if(isExpired()) return toastMsg('La promoción finalizó');
   if(localStorage.getItem('spin_done')==='1') return toastMsg('Ya usaste tu giro de hoy');
 
-  spinBtn.disabled=true; mSpin.disabled=true; claimBtn.disabled=true; mClaim.disabled=true;
+  // deshabilitar mientras gira
+  setCtasEnabled(false);
+
   const extra=5+Math.random()*1.5, offset=Math.random()*TWO; const final=angle+(TWO*extra)+offset;
   animateTo(final,3200,()=>{
     angle=final; const idx=winnerIndex(angle); const prize=PRIZES[idx];
     setWon(prize); localStorage.setItem('spin_done','1'); localStorage.setItem('spin_prize',JSON.stringify(prize));
   });
 }
-spinBtn.addEventListener('click',onSpin); mSpin.addEventListener('click',onSpin);
 
-resetBtn.addEventListener('click',()=>{
+function setCtasEnabled(on){
+  if(spinBtn) spinBtn.disabled=!on;
+  if(resetBtn) resetBtn.disabled=!on;
+  claimBtn.disabled=!on;
+  mSpin.disabled=!on;
+  mClaim.disabled=!on;
+}
+
+if(document.getElementById('spinBtn')) document.getElementById('spinBtn').addEventListener('click',onSpin);
+document.getElementById('mSpin').addEventListener('click',onSpin);
+
+if(document.getElementById('resetBtn')) document.getElementById('resetBtn').addEventListener('click',()=>{
   localStorage.removeItem('spin_done');localStorage.removeItem('spin_prize');
   angle=0;draw(angle);pill.textContent='-';
   titleEl.textContent='Tenés 1 giro disponible';subtitle.innerHTML='Los premios se acreditan con tu <b>próxima carga mínima</b>.';
@@ -231,11 +251,15 @@ function setWon(prize){
   pill.textContent=(prize.type==='%'? prize.value+'%':"$"+prize.value.toLocaleString("es-AR"));
   titleEl.textContent='🎉 ¡Premio obtenido!';
   subtitle.innerHTML=`Recibís <b>${txt}</b> con tu próxima carga.`;
-  claimBtn.disabled=false; mClaim.disabled=false; fabWA.disabled=false;
 
   const msg=encodeURIComponent(waMsgFor(txt));
   const go=()=>location.href=`https://wa.me/${WP}?text=${msg}`;
-  claimBtn.onclick=go; mClaim.onclick=go; fabWA.onclick=go;
+
+  // habilitar CTAs (desktop + móvil)
+  if(document.getElementById('spinBtn')) document.getElementById('spinBtn').disabled=false;
+  claimBtn.disabled=false; mClaim.disabled=false;
+  mClaim.onclick=go; claimBtn.onclick=go; fabWA.onclick=go; fabWA.disabled=false;
+
   confettiBurst();
 }
 
@@ -258,11 +282,6 @@ function initFabDefault(){
   fabWA.onclick=()=>location.href=`https://wa.me/${WP}?text=${defMsg}`; fabWA.disabled=false;
 }
 setSize(); draw(angle); initFabDefault();
-
-/* Ocultar FAB si CTA fija está visible (móvil) */
-const mo = window.matchMedia('(max-width: 560px)');
-function handleMobileBar(e){ fabWA.style.display = e.matches ? 'none':'flex'; }
-handleMobileBar(mo); mo.addEventListener('change',handleMobileBar);
 </script>
 </body>
 </html>
