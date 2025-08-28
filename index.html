@@ -1,28 +1,327 @@
-/* ========= AUDIO (deja tus variables como estaban) ========= */
-const tickEveryMs = 90;
-let tickTimer=null;
-function startTicks(){ if(!soundOn) return; stopTicks(); tickTimer=setInterval(()=>{ try{tickSfx.currentTime=0;tickSfx.play()}catch(e){} },tickEveryMs); }
-function stopTicks(){ if(tickTimer){ clearInterval(tickTimer); tickTimer=null; } }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+<title>BET300 · Promo interactiva</title>
+<style>
+  :root{
+    --bg:#0b1330;
+    --card:#0f1b3f;
+    --chip:#ffb27f;
+    --txt:#eaf1ff;
+    --muted:#9fb2d9;
+    --ctaA:#ff5a6a;
+    --ctaB:#22c55e;
+    --ring:#4b5563;
+    --light:#dbeafe;
+    --pointer:#26d0ff;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:radial-gradient(1200px 800px at 50% -200px,#09112a 0%,#071028 30%,#050d22 60%,#050b1d 100%);
+    color:var(--txt); font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;
+  }
+  .wrap{max-width:920px; margin-inline:auto; padding:20px 16px 110px; position:relative}
+  header{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+  .badge{display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border-radius:14px; font-weight:700; background:linear-gradient(90deg,#ffc49b,#ff7ea0); color:#1b1030}
+  .pill{padding:8px 14px; border-radius:999px; background:linear-gradient(90deg,#1b2b62,#203573); color:#d6e3ff; font-weight:600}
+  .row{display:flex; gap:14px; flex-wrap:wrap; margin-top:14px}
+  .pill.secondary{background:linear-gradient(90deg,#1b2b62,#253a77)}
+  .sound{display:flex; align-items:center; gap:10px}
+  .toggle{width:56px;height:30px;border-radius:999px;background:#223158;position:relative;cursor:pointer}
+  .toggle::after{content:""; position:absolute; width:24px;height:24px; top:3px; left:3px; border-radius:50%; background:#8ab6ff; transition:left .2s}
+  .toggle.on{background:#135a37}
+  .toggle.on::after{left:29px; background:#b8ffd4}
 
-/* ========= CONFETTI simple ========= */
-const fxCanvas = document.getElementById('fx');
-const fctx = fxCanvas.getContext('2d');
-function resizeFx(){ const r=fxCanvas.getBoundingClientRect(); fxCanvas.width=r.width*devicePixelRatio; fxCanvas.height=r.height*devicePixelRatio; fctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0); }
-addEventListener('resize',resizeFx); resizeFx();
+  /* ===== WHEEL AREA ===== */
+  .stage{margin-top:16px; background:#0c1637; border-radius:22px; padding:14px; box-shadow:0 10px 50px #0007}
+  .wheel-wrap{position:relative; aspect-ratio:1/1; max-width:640px; margin:0 auto}
+  svg{display:block; width:100%; height:auto}
 
-function burstConfetti(){
+  /* ring of bulbs */
+  .bulb{fill:#1d2435; stroke:#67718a; stroke-width:2}
+  .bulb.on{fill:var(--light)}
+  @keyframes glow {0%,100%{filter:drop-shadow(0 0 0px rgba(255,255,255,.0))} 50%{filter:drop-shadow(0 0 6px rgba(209,233,255,.9))}}
+  .bulbGlow{animation:glow 1.6s ease-in-out infinite}
+
+  /* pointer */
+  .pointer{
+    position:absolute; left:50%; top:-6%; width:min(50px,7.2vw); aspect-ratio:1/1;
+    transform:translateX(-50%);
+    filter:drop-shadow(0 6px 10px #0006);
+  }
+  .pointer svg path{fill:var(--pointer)}
+
+  /* radial text contrast */
+  .sliceText{
+    font-weight:900;
+    fill:#06122c;               /* texto bien oscuro */
+    font-size:22px;
+    paint-order:stroke;
+    stroke:#ffffff; stroke-width:.9px;
+  }
+  @media (max-width:420px){ .sliceText{font-size:20px} }
+  @media (max-width:360px){ .sliceText{font-size:18px} }
+
+  /* RESULT / CTAs */
+  .card{margin-top:18px; background:#0c1637; border-radius:18px; padding:16px; box-shadow:0 10px 40px #0006}
+  .kpi{display:inline-flex; align-items:center; justify-content:center; width:110px; height:64px; border-radius:18px; background:linear-gradient(145deg,#1b2250,#28356b); font-size:26px; font-weight:900}
+  .title{font-size:26px; font-weight:900; margin:0 0 6px}
+  .muted{color:var(--muted)}
+  .flex{display:flex; align-items:center; gap:14px}
+
+  .fixed-cta{
+    position:fixed; left:0; right:0; bottom:0;
+    background:linear-gradient(180deg,rgba(6,10,26,0) 0%, rgba(6,10,26,.72) 20%, rgba(6,10,26,.92) 60%, rgba(6,10,26,1) 100%);
+    padding:10px 12px 14px; z-index:20;
+  }
+  .cta-row{display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:920px; margin-inline:auto}
+  .btn{
+    border:0; border-radius:16px; padding:16px 14px; font-size:18px; font-weight:900; cursor:pointer;
+    color:#0a0f1e; box-shadow:0 10px 30px #0008;
+  }
+  .btn.spin{background:linear-gradient(90deg,#ff9aa0,#ff7587,#ff5a6a)}
+  .btn.claim{background:linear-gradient(90deg,#59e38d,#36d072,#22c55e)}
+  .btn:active{transform:translateY(1px)}
+
+  /* WhatsApp float */
+  .wa-float{
+    position:fixed; right:16px; bottom:84px; width:66px; height:66px; border-radius:50%;
+    background:#25d366; display:grid; place-items:center; box-shadow:0 12px 35px #0009; z-index:25;
+    animation:beat 1.4s ease-in-out infinite;
+  }
+  .wa-float img{width:34px; height:34px}
+  @keyframes beat{0%,100%{transform:scale(1)} 30%{transform:scale(1.08)} 60%{transform:scale(0.98)}}
+
+  /* confetti canvas */
+  .fx{position:absolute; inset:0; pointer-events:none; z-index:5}
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header>
+      <div class="badge">BET300</div>
+      <div class="pill">Promo interactiva · válida <b>hoy</b></div>
+    </header>
+
+    <div class="row">
+      <div class="pill secondary">⏳ <span id="timer">--:--</span></div>
+      <div class="pill secondary sound">
+        🔊 Sonido:
+        <div id="soundTog" class="toggle on" aria-label="sonido"></div>
+      </div>
+    </div>
+
+    <!-- ===== WHEEL STAGE ===== -->
+    <section class="stage">
+      <div class="wheel-wrap" id="wheelWrap">
+        <!-- glow bulbs + wheel in single SVG -->
+        <svg id="wheelSvg" viewBox="0 0 600 600" aria-label="ruleta">
+          <!-- outer bulbs -->
+          <g id="bulbs"></g>
+          <!-- wheel (rotates) -->
+          <g id="rotor" transform="rotate(0 300 300)">
+            <g id="slices"></g>
+            <!-- inner hub -->
+            <circle cx="300" cy="300" r="55" fill="#0b1330" stroke="#99b3ff" stroke-width="10"/>
+          </g>
+        </svg>
+        <!-- pointer -->
+        <div class="pointer" aria-hidden="true">
+          <svg viewBox="0 0 80 80"><path d="M40 8 L66 52 H14 Z"/></svg>
+        </div>
+        <!-- confetti -->
+        <canvas id="fx" class="fx"></canvas>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="card">
+      <div class="flex">
+        <div class="kpi" id="badge">-</div>
+        <div>
+          <h3 class="title" id="resultTitle">Tenés 1 giro disponible</h3>
+          <div class="muted" id="resultText">Los premios se acreditan con tu <b>próxima carga mínima</b>.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTAs inferiores -->
+    <div class="fixed-cta">
+      <div class="cta-row">
+        <button id="btnSpin" class="btn spin">🎰 Girar</button>
+        <a id="btnClaim" class="btn claim" href="#" target="_blank" rel="noopener">📲 Reclamar</a>
+      </div>
+    </div>
+
+    <!-- WhatsApp flotante -->
+    <a id="waFloat" class="wa-float" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <img alt="WhatsApp" src="data:image/svg+xml;utf8,<?xml version='1.0'?><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'><path fill='%23fff' d='M187.3 68.7A88 88 0 0 0 43.4 181.5L32 224l43.1-11.3A88 88 0 0 0 187.3 68.7Zm-68.5 120.7h-.1a72.1 72.1 0 1 1 72.1-72.1a72.2 72.2 0 0 1-72 72.2Zm41.8-53.3c-2.3-1.1-13.6-6.7-15.7-7.4s-3.6-1.1-5.1 1.1s-5.8 7.4-7.1 8.9s-2.6 1.7-4.9 .6s-9.6-3.5-18.4-11.2c-6.8-6.1-11.4-13.7-12.7-16s0-3.6 1-4.7s2.3-2.7 3.4-4.1s1.4-2.3 2.1-3.9s.4-2.9-.2-4s-5.1-12.3-7-16.9s-3.8-3.9-5.1-4s-2.9-.1-4.4-.1a8.4 8.4 0 0 0-6.1 2.9c-2.1 2.3-8 7.8-8 19.1s8.2 22.1 9.3 23.6s16 24.4 38.7 34.2a130.9 130.9 0 0 0 13 4.8c5.5 1.7 10.5 1.5 14.4 .9c4.4-.6 13.6-5.6 15.6-11s2-10.1 1.4-11.1s-2.1-1.7-4.4-2.8Z'/><path fill='%2325D366' d='M128 20A108 108 0 0 0 48.3 204.7L36 244l40.6-12.1A108 108 0 1 0 128 20Zm0 192h-.1A84 84 0 1 1 128 44a84 84 0 0 1 0 168Z'/></svg>" />
+    </a>
+
+  </div>
+
+<script>
+/* =============================== */
+/* ======= CONFIG & MAPPERS ====== */
+/* =============================== */
+
+/* Mapea ?pc= para armar WhatsApp y (si querés) plataforma */
+const PC_MAP = {
+  "1": { wa:"https://wa.me/54911XXXXXXXX?text=Hola%20vengo%20de%20la%20promo", platform:"https://tudominio.com/panel?pc=1" },
+  "2": { wa:"https://wa.me/54911YYYYYYYY?text=Hola%20vengo%20de%20la%20promo", platform:"https://tudominio.com/panel?pc=2" },
+  "3": { wa:"https://wa.me/54911ZZZZZZZZ?text=Hola%20vengo%20de%20la%20promo", platform:"https://tudominio.com/panel?pc=3" },
+  // ...agregá las que uses
+};
+const params = new URLSearchParams(location.search);
+const pc = params.get("pc") || "1";
+const waUrl = (PC_MAP[pc]?.wa)||"https://wa.me/54911XXXXXXXX?text=Hola%20vengo%20de%20la%20promo";
+document.getElementById("btnClaim").href = waUrl;
+document.getElementById("waFloat").href = waUrl;
+
+/* =============================== */
+/* ========== TIMER UI =========== */
+function startTimer(mins=3){
+  const end = Date.now()+mins*60*1000;
+  const el = document.getElementById("timer");
+  const i = setInterval(()=>{
+    let left = Math.max(0, end-Date.now());
+    const m = String(Math.floor(left/60000)).padStart(2,"0");
+    const s = String(Math.floor((left%60000)/1000)).padStart(2,"0");
+    el.textContent = `${m}:${s}`;
+    if(left<=0) clearInterval(i);
+  },250);
+}
+startTimer(60);
+
+/* =============================== */
+/* ======= WEB AUDIO SOUNDS ====== */
+let audioCtx=null, soundOn=true;
+const tog = document.getElementById("soundTog");
+tog.addEventListener("click",()=>{
+  tog.classList.toggle("on");
+  soundOn = tog.classList.contains("on");
+  if(soundOn && !audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+});
+function beep({freq=800, dur=60, type="square", vol=.08}){
+  if(!soundOn) return;
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  const t=audioCtx.currentTime;
+  const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+  o.type=type; o.frequency.setValueAtTime(freq,t);
+  g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur/1000);
+  o.connect(g).connect(audioCtx.destination); o.start(t); o.stop(t+dur/1000);
+}
+function whoosh(ms=2600){ // spin ambience
+  if(!soundOn) return;
+  const t=audioCtx.currentTime, g=audioCtx.createGain(), n=audioCtx.createBufferSource();
+  const len = audioCtx.sampleRate * (ms/1000), buf = audioCtx.createBuffer(1,len,audioCtx.sampleRate);
+  const data = buf.getChannelData(0);
+  for(let i=0;i<len;i++){ data[i]=(Math.random()*2-1)* (1 - i/len); }
+  n.buffer=buf; n.loop=false; g.gain.value=.12; n.connect(g).connect(audioCtx.destination);
+  n.start(t); n.stop(t+ms/1000);
+}
+
+/* =============================== */
+/* ======== WHEEL DRAWING ======== */
+const prizes = [
+  "$2.000","$3.000","10%","$4.000","20%","$5.000",
+  "30%","$6.000","40%","$7.000","$8.000","$9.000","$10.000","50%"
+];
+const seg = 360/prizes.length;
+const colors = ["#bfe7ff","#ffc7f2","#b8ffdf","#ffe5a3","#c9b2ff","#a6f2ff"]; // vivos
+
+const svg = document.getElementById('wheelSvg');
+const rotor = document.getElementById('rotor');
+const slices = document.getElementById('slices');
+const bulbsG = document.getElementById('bulbs');
+
+/* bulbs ring */
+(function drawBulbs(){
+  const total=36, R=290;
+  for(let i=0;i<total;i++){
+    const ang = (i/total)*Math.PI*2;
+    const x = 300 + Math.cos(ang)*R;
+    const y = 300 + Math.sin(ang)*R;
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',x); c.setAttribute('cy',y); c.setAttribute('r',8);
+    c.setAttribute('class','bulb');
+    bulbsG.appendChild(c);
+  }
+  // encendido secuencial
+  let k=0; setInterval(()=>{
+    [...bulbsG.children].forEach((b,i)=>{
+      b.setAttribute('class','bulb '+(i%4===k?'on bulbGlow':'')); });
+    k=(k+1)%4;
+  },180);
+})();
+
+/* slices + radial text */
+(function drawSlices(){
+  slices.innerHTML="";
+  const rOuter=250, rInner=90;
+  for(let i=0;i<prizes.length;i++){
+    const start = (i*seg - 90)*Math.PI/180, end = ((i+1)*seg - 90)*Math.PI/180;
+    const x1=300+Math.cos(start)*rOuter, y1=300+Math.sin(start)*rOuter;
+    const x2=300+Math.cos(end  )*rOuter, y2=300+Math.sin(end  )*rOuter;
+    const x3=300+Math.cos(end  )*rInner, y3=300+Math.sin(end  )*rInner;
+    const x4=300+Math.cos(start)*rInner, y4=300+Math.sin(start)*rInner;
+
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',`M${x1} ${y1} A ${rOuter} ${rOuter} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${rInner} ${rInner} 0 0 0 ${x4} ${y4} Z`);
+    p.setAttribute('fill', colors[i%colors.length]);
+    slices.appendChild(p);
+
+    const mid=(start+end)/2, angDeg=mid*180/Math.PI;
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('transform',`rotate(${angDeg} 300 300)`);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',300); t.setAttribute('y',155);
+    t.setAttribute('text-anchor','middle'); t.setAttribute('dominant-baseline','middle');
+    t.setAttribute('class','sliceText');
+    t.textContent=prizes[i];
+    g.appendChild(t); slices.appendChild(g);
+  }
+})();
+
+/* =============================== */
+/* =========== SPIN ============== */
+let totalRot=0, spinning=false, tickTimer=null;
+const btnSpin=document.getElementById('btnSpin');
+
+function startTicks(){
+  if(tickTimer) clearInterval(tickTimer);
+  tickTimer=setInterval(()=>beep({freq:1100, dur:45, vol:.06}), 90);
+}
+function stopTicks(){ if(tickTimer){clearInterval(tickTimer); tickTimer=null;} }
+
+/* confetti canvas */
+const fx = document.getElementById('fx'), fctx = fx.getContext('2d');
+const wheelWrap = document.getElementById('wheelWrap');
+function resizeFx(){
+  const r = wheelWrap.getBoundingClientRect();
+  fx.width = r.width * devicePixelRatio;
+  fx.height = r.height * devicePixelRatio;
+  fctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+}
+new ResizeObserver(resizeFx).observe(wheelWrap);
+
+function confetti(){
   const N=120, parts=[];
   for(let i=0;i<N;i++){
     parts.push({
-      x: fxCanvas.width/2 + (Math.random()*80-40),
-      y: fxCanvas.height*0.15,
+      x: fx.width/2 + (Math.random()*80-40),
+      y: fx.height*0.15,
       vx: (Math.random()*4-2), vy: (Math.random()*-4-3),
       g: 0.12+Math.random()*0.08, life: 60+Math.random()*30,
       c: `hsl(${Math.random()*360},90%,55%)`, s: 3+Math.random()*3, a:1
     });
   }
   let id; (function frame(){
-    fctx.clearRect(0,0,fxCanvas.width,fxCanvas.height);
+    fctx.clearRect(0,0,fx.width,fx.height);
     let alive=false;
     for(const p of parts){
       if(p.life>0){ alive=true; p.life--; p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.a=Math.max(0,p.life/90);
@@ -34,30 +333,21 @@ function burstConfetti(){
   })();
 }
 
-/* ========= SPIN calibrado (reemplazo) ========= */
 function spin(){
   if(spinning) return;
   spinning=true;
 
-  // elegimos ganador
   const idx = Math.floor(Math.random()*prizes.length);
-
-  // Ángulo ABSOLUTO del centro del gajo (con offset -90° en el dibujo)
-  const center = (idx + 0.5)*seg - 90;      // -90..270
-
-  // Queremos que ese centro quede en 0° (punta hacia arriba).
-  // La rueda rota en sentido horario con valores positivos.
-  // Rotación final modular:
-  const align = (360 - ((center%360)+360)%360) % 360;
-
-  // 6 vueltas + alineación exacta
-  const finalRot = (totalRot + 360*6 + align) % 360;
+  const center = (idx + 0.5)*seg - 90;                     // centro del gajo dibujado
+  const align  = (360 - ((center%360)+360)%360) % 360;     // llevar centro a 0°
+  const finalRot = (totalRot + 360*6 + align) % 360;       // 6 vueltas + alineación
   totalRot = finalRot;
 
   rotor.style.transition = 'transform 2.6s cubic-bezier(.2,.85,.2,1)';
   rotor.style.transform  = `rotate(${totalRot}deg)`;
 
-  if(soundOn){ try{spinSfx.currentTime=0;spinSfx.play()}catch(e){} }
+  // sonidos
+  if(soundOn){ whoosh(2600); }
   startTicks();
 
   setTimeout(()=>{
@@ -65,19 +355,27 @@ function spin(){
     rotor.style.transform = `rotate(${totalRot}deg)`;
     stopTicks();
 
-    // seguridad: re-calc índice por ángulo final
-    const angleAtPointer = ((-totalRot)%360+360)%360;     // 0..359
+    // calcula ganador por ángulo final
+    const angleAtPointer = ((-totalRot)%360+360)%360; // 0..359, donde 0° es arriba
     let calcIdx = Math.floor(((angleAtPointer + 90) % 360)/seg);
     if(calcIdx<0) calcIdx=0; if(calcIdx>=prizes.length) calcIdx=prizes.length-1;
 
     const prize = prizes[calcIdx];
-
     document.getElementById('badge').textContent = prize;
     document.getElementById('resultTitle').textContent = '🎉 ¡Premio obtenido!';
     document.getElementById('resultText').innerHTML = `Recibís <b>${prize}</b> en tu próxima carga.`;
 
-    if(soundOn){ try{winSfx.currentTime=0;winSfx.play()}catch(e){} }
-    burstConfetti();            // 🌈 confetti
+    if(soundOn){ beep({freq:880,dur:120, type:'sine', vol:.12}); setTimeout(()=>beep({freq:1320,dur:150, type:'sine', vol:.12}),120); }
+    confetti();
     spinning=false;
   },2600);
 }
+
+btnSpin.addEventListener('click', spin);
+
+/* =============================== */
+/* ===== INIT: resize confetti === */
+resizeFx();
+</script>
+</body>
+</html>
