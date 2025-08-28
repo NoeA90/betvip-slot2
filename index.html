@@ -1,260 +1,347 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <title>BET300 · Promo interactiva</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#070b22; --panel:#0f1536; --ink:#eef3ff;
-    --brand1:#ffb03a; --brand2:#ff2f6d;
-    --cta1:#ff2f55; --cta2:#ff8d3a; --cta3:#00c98b; --cta4:#37e06b;
-    --accent:#00f0ff;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial}
-  header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px}
-  .logo{background:linear-gradient(45deg,var(--brand1),var(--brand2));padding:6px 16px;border-radius:12px;font-weight:900;color:#161616}
-  .pill{display:inline-flex;gap:8px;align-items:center;background:linear-gradient(90deg,#1a2247,#27366a);padding:8px 12px;border-radius:14px;font-size:14px}
-  .row{display:flex;gap:10px;align-items:center;padding:0 16px 8px}
+:root{
+  --bg:#0b1326;
+  --card:#0f1a33;
+  --mute:#93a3ff22;
+  --text:#e9eefc;
+  --accent:#3ee7a6;
+  --cta1:#ff6a6a;
+  --cta2:#54d96a;
+  --chip:#1c284a;
+  --chip2:#0c152e;
+  --bulb:#dff0ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Montserrat,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
+.wrap{max-width:980px;padding:18px;margin:auto}
+.top{
+  display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:flex-start;
+}
+.badge{background:linear-gradient(135deg,#ffb36b,#ff6b95);padding:10px 16px;border-radius:14px;font-weight:900;letter-spacing:.3px}
+.pill{background:linear-gradient(135deg,#2e3a78,#0d214b);border:1px solid #3a4a8a55;padding:10px 14px;border-radius:999px;display:flex;gap:10px;align-items:center}
+.timer{background:linear-gradient(135deg,#1e294f,#0e1a38);border:1px solid #394a8250;padding:8px 12px;border-radius:14px;display:flex;gap:8px;align-items:center}
 
-  /* Escena */
-  .stage{margin:0 auto;background:#0b1231;border-radius:18px;padding:14px;max-width:920px}
-  .wheel-box{display:grid;place-items:center}
-  .wheel-wrap{position:relative;width:clamp(280px,92vw,540px);aspect-ratio:1/1}
-  canvas{width:100%;height:100%;display:block}
-  .pointer{position:absolute;left:50%;top:-8px;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:30px solid var(--accent);filter:drop-shadow(0 0 10px rgba(0,255,255,.55));z-index:2}
+.board{margin-top:14px;background:var(--card);border:1px solid #243259;border-radius:18px;padding:18px}
+.stage{position:relative;display:flex;justify-content:center;align-items:center;aspect-ratio:1/1;width:min(92vw,760px);margin:8px auto 18px;border-radius:20px}
+#wheelCanvas{width:100%;height:100%}
 
-  /* Panel resultado */
-  .panel{max-width:920px;margin:10px auto 16px;background:var(--panel);border-radius:16px;padding:14px}
-  .result{display:flex;align-items:center;gap:12px}
-  .badge{display:grid;place-items:center;width:90px;height:58px;border-radius:16px;background:linear-gradient(135deg,#253064,#3a1f78);font-weight:900;font-size:22px}
-  .title{margin:0 0 6px;font-size:22px;font-weight:900}
+.pointer{
+  position:absolute;top:6%;
+  width:min(10vw,58px);aspect-ratio:1/1.15;
+  clip-path:polygon(50% 0%, 0% 100%, 100% 100%);
+  background:radial-gradient(ellipse at 50% 80%,#2ff0ff 0%,#00b4ff 35%,#0071ff 70%,#003caa 100%);
+  filter:drop-shadow(0 6px 10px #00a6ff55);
+  transform:translateY(-2px);
+}
 
-  /* CTA inferior */
-  .cta{position:sticky;bottom:0;padding:10px 12px;background:linear-gradient(180deg,rgba(7,11,34,0),rgba(7,11,34,.9));backdrop-filter:blur(6px);display:flex;gap:10px}
-  .btn{flex:1;min-height:56px;border:none;border-radius:14px;font-weight:900;color:#fff;font-size:18px;cursor:pointer}
-  .btn:active{transform:translateY(1px)}
-  .btn-spin{background:linear-gradient(45deg,var(--cta1),var(--cta2))}
-  .btn-claim{background:linear-gradient(45deg,var(--cta3),var(--cta4))}
+.card{
+  background:linear-gradient(180deg,#0f1a33 0%,#0a1329 100%);
+  border:1px solid #25345c; border-radius:16px; padding:16px 16px 14px; margin:6px auto 0;
+  display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;max-width:760px;
+}
+.badge-win{min-width:110px;display:grid;place-items:center;height:56px;color:#fff;font-weight:900;
+  background:radial-gradient(120% 120% at 20% 20%,#2b3f9f,#4b2b9f);border-radius:14px;box-shadow:inset 0 0 0 2px #8db1ff33}
+.h1{font-size:clamp(20px,4vw,28px);font-weight:900;margin:0}
+.p{margin:0;color:#cfe0ff;font-weight:700}
 
-  /* WhatsApp flotante */
-  .wa{position:fixed;right:16px;bottom:16px;width:66px;height:66px;border-radius:50%;display:grid;place-items:center;background:#25d366;box-shadow:0 10px 24px rgba(0,0,0,.35);animation:pulse 1.6s infinite;z-index:5}
-  .wa svg{width:34px;height:34px;fill:#fff}
-  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.actions{
+  position:sticky;bottom:0;z-index:3;background:linear-gradient(180deg,#0000,#0b1326 40% 100%);
+  padding:10px 0 14px;margin-top:10px
+}
+.grid-btn{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:760px;margin:0 auto}
+.btn{
+  border:0;border-radius:14px;padding:14px 16px;font-size:18px;font-weight:900;color:#0d132b;cursor:pointer;
+  transition:transform .06s ease, box-shadow .2s;
+}
+.btn:active{transform:translateY(1px)}
+.btn.spin{background:linear-gradient(135deg,#ff9c8a,#ff5f7c);color:white;box-shadow:0 8px 18px #ff6b8c35}
+.btn.claim{background:linear-gradient(135deg,#71ffb0,#13e06e);color:#08331e;box-shadow:0 8px 18px #28ff9a35}
+.btn[disabled]{opacity:.45;filter:grayscale(.2);cursor:not-allowed}
 
-  .mute{cursor:pointer}
+.fw{font-weight:900}
+.hl{color:#ffffff}
+
+.whatsapp-fab{
+  position:fixed;right:18px;bottom:88px;width:64px;height:64px;border-radius:999px;background:#25d366;
+  display:grid;place-items:center;box-shadow:0 14px 26px #25d36655, inset 0 -6px 12px #168c40;
+  z-index:5;cursor:pointer;animation:pulse 1.6s infinite;
+}
+.whatsapp-fab svg{width:34px;height:34px;fill:#fff}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.06)}
+}
+
+/* bulbs ring overlay for subtle glow */
+.bulbs-overlay{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
 </style>
 </head>
 <body>
-<header>
-  <div class="logo">BET300</div>
-  <div class="pill">Promo interactiva · válida <b> hoy</b></div>
-</header>
-<div class="row">
-  <div class="pill">⏳ <span id="timer">--:--:--</span></div>
-  <div class="pill mute" id="soundToggle">🔊 Sonido: <b id="soundState">ON</b></div>
-</div>
+  <div class="wrap">
+    <div class="top">
+      <div class="badge">BET300</div>
+      <div class="pill">Promo interactiva · válida <b>hoy</b></div>
+      <div class="timer" id="timer"><span>⏳</span><b id="tleft">--:--:--</b></div>
+      <div class="pill">🔊 Sonido: <b id="soundState">ON</b></div>
+    </div>
 
-<section class="stage">
-  <div class="wheel-box">
-    <div class="wheel-wrap" id="wheelWrap">
-      <div class="pointer"></div>
-      <canvas id="wheel"></canvas>
+    <div class="board">
+      <div class="stage">
+        <canvas id="wheelCanvas"></canvas>
+        <div class="pointer"></div>
+        <div class="bulbs-overlay" id="bulbs"></div>
+      </div>
+
+      <div class="card" id="resultCard">
+        <div class="badge-win" id="winBadge">-</div>
+        <div>
+          <p class="h1">🎉 <b>¡Premio obtenido!</b></p>
+          <p class="p">Recibís <span id="winText" class="fw hl">-</span> en tu próxima carga.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="grid-btn">
+        <button id="btnSpin" class="btn spin">🎰 Girar</button>
+        <button id="btnClaim" class="btn claim">📲 Reclamar</button>
+      </div>
     </div>
   </div>
-</section>
 
-<section class="panel">
-  <div class="result">
-    <div class="badge" id="badge">-</div>
-    <div>
-      <h3 class="title" id="resultTitle">Tenés 1 giro disponible</h3>
-      <div id="resultText">Los premios se acreditan con tu <b>próxima carga mínima</b>.</div>
-    </div>
-  </div>
-</section>
+  <!-- WhatsApp FAB -->
+  <a id="waFab" class="whatsapp-fab" aria-label="WhatsApp" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 32 32"><path d="M19.11 17.29c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.47.13-.62.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.1 4.49.71.31 1.26.5 1.69.64.71.22 1.36.19 1.87.11.57-.08 1.77-.72 2.02-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35zM16.04 3.2C8.86 3.2 3.1 8.95 3.1 16.12c0 2.28.61 4.42 1.68 6.26L3 29l6.78-1.76c1.78.97 3.82 1.52 5.98 1.52 7.18 0 12.93-5.75 12.93-12.92S23.22 3.2 16.04 3.2zm0 23.55c-1.98 0-3.83-.58-5.37-1.57l-.38-.24-4.03 1.05 1.08-3.92-.25-.4a10.55 10.55 0 0 1-1.6-5.55c0-5.84 4.75-10.6 10.6-10.6s10.6 4.76 10.6 10.6-4.76 10.61-10.6 10.61z"/></svg>
+  </a>
 
-<div class="cta">
-  <button class="btn btn-spin" id="spinBtn">🎰 Girar</button>
-  <button class="btn btn-claim" id="claimBtn">📲 Reclamar</button>
-</div>
-
-<a class="wa" id="waFloat" aria-label="WhatsApp">
-  <svg viewBox="0 0 32 32"><path d="M19.11 17.56c-.27-.14-1.61-.8-1.86-.89-.25-.09-.43-.14-.61.14s-.7.89-.86 1.08c-.16.2-.32.2-.59.07-.27-.14-1.14-.42-2.17-1.35-.8-.71-1.35-1.6-1.51-1.87-.16-.27-.02-.42.12-.56.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.83-2.02-.22-.53-.45-.46-.61-.46h-.52c-.18 0-.48.07-.73.34s-.96.94-.96 2.29 1 2.65 1.14 2.83c.14.18 1.96 2.98 4.75 4.18.66.29 1.18.46 1.58.59.66.21 1.27.18 1.75.11.53-.08 1.61-.66 1.84-1.29.23-.63.23-1.17.16-1.29-.07-.12-.25-.2-.52-.34zM16.02 3.2C9.84 3.2 4.82 8.21 4.82 14.4c0 2.35.76 4.53 2.04 6.31L5.2 28.8l8.28-1.62c1.73.95 3.71 1.49 5.82 1.49 6.18 0 11.2-5.01 11.2-11.2S22.2 3.2 16.02 3.2z"/></svg>
-</a>
+  <!-- sonidos -->
+  <audio id="sndSpin" preload="auto">
+    <source src="https://cdn.jsdelivr.net/gh/jfeng45/hosted-audio/spin-soft.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="sndWin" preload="auto">
+    <source src="https://cdn.jsdelivr.net/gh/jfeng45/hosted-audio/win-bell.mp3" type="audio/mpeg">
+  </audio>
 
 <script>
-/* ======== CONFIG Y ESTADO ======== */
-const prizes = [
-  "$2.000","$3.000","10%","$4.000","20%","$5.000",
-  "30%","$6.000","40%","$7.000","$8.000","$9.000","$10.000","50%"
-];
-const seg = 2*Math.PI/prizes.length;
-const colors = ["#bfe7ff","#ffc7f2","#b8ffdf","#ffe5a3"]; // alternados
-const bulbs = 54;
+/* ---------- util: parámetros PC ---------- */
+const PC_MAP = {
+  // puedes ajustar los números a tus líneas reales
+  1:{ wa:"https://wa.me/5491111111111", platform:"https://caja1.bet300.app" },
+  2:{ wa:"https://wa.me/5492222222222", platform:"https://caja2.bet300.app" },
+  3:{ wa:"https://wa.me/5493333333333", platform:"https://caja3.bet300.app" },
+  4:{ wa:"https://wa.me/5494444444444", platform:"https://caja4.bet300.app" },
+};
+const url = new URL(location.href);
+const pc = url.searchParams.get("pc") || "1";
+const LINKS = PC_MAP[pc] || PC_MAP["1"];
+document.getElementById("waFab").href = LINKS.wa;
+document.getElementById("btnClaim").addEventListener("click",()=>window.open(LINKS.wa,"_blank"));
 
-let soundOn = true;
-const spinSfx = new Audio('https://cdn.jsdelivr.net/gh/jackyzha0/sfx/spin.mp3');
-const winSfx  = new Audio('https://www.soundjay.com/human/sounds/applause-8.mp3');
-
-const canvas = document.getElementById('wheel');
-const ctx = canvas.getContext('2d');
-let size, radius, center, animId;
-let angle = 0;              // ángulo actual
-let velocity = 0;           // velocidad angular
-let spinning = false;
-
-/* ======== RESPONSIVE & DIBUJO ======== */
-function resize(){
-  const wrap = document.getElementById('wheelWrap');
-  const px = Math.floor(wrap.clientWidth * window.devicePixelRatio);
-  canvas.width = px;
-  canvas.height = px;
-  size = px;
-  radius = px/2;
-  center = {x:radius, y:radius};
-  draw();
+/* ---------- contador 23:59 del día ---------- */
+const tleft = document.getElementById('tleft');
+function updateCountdown(){
+  const now=new Date();
+  const end=new Date();
+  end.setHours(23,59,59,999);
+  const ms=end-now;
+  if(ms<=0){tleft.textContent="00:00:00";return}
+  const h=String(Math.floor(ms/3600000)).padStart(2,'0');
+  const m=String(Math.floor((ms%3600000)/60000)).padStart(2,'0');
+  const s=String(Math.floor((ms%60000)/1000)).padStart(2,'0');
+  tleft.textContent=`${h}:${m}:${s}`;
 }
-window.addEventListener('resize', ()=>{ cancelAnimationFrame(animId); draw(); resize(); });
-resize();
+setInterval(updateCountdown,1000);updateCountdown();
 
-function draw(){
-  ctx.clearRect(0,0,size,size);
+/* ---------- datos ruleta ---------- */
+const segments = [
+  "$2.000","10%","$3.000","20%","$4.000","30%","$5.000","40%",
+  "$6.000","50%","$7.000","10%","$8.000","20%","$9.000","$10.000"
+]; // 16
+// colores vivos intercalados ($ / %)
+const colMoney = ["#b7f6ff","#99ecff","#7ee0ff","#64d4ff"];
+const colPerc  = ["#ffc7e5","#ffb0d9","#ff9acc","#ff84c0"];
+function segColor(i){
+  const isMoney = segments[i].includes("$");
+  const arr = isMoney ? colMoney : colPerc;
+  return arr[i%arr.length];
+}
 
-  // fondo disco
+/* ---------- canvas ---------- */
+const canvas = document.getElementById('wheelCanvas');
+const ctx = canvas.getContext('2d');
+let size, radius, center, bulbCount=48;
+function resizeCanvas(){
+  // devicePixelRatio para nitidez
+  const dpr = Math.max(1,window.devicePixelRatio||1);
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = Math.floor(rect.width*dpr);
+  canvas.height = Math.floor(rect.height*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0); // volver a CSS px
+  size = Math.min(rect.width, rect.height);
+  radius = size*0.44;
+  center = {x: rect.width/2, y: rect.height/2+2};
+  drawWheel(angle);
+}
+window.addEventListener('resize',resizeCanvas);
+
+/* ---------- dibujo ---------- */
+const bulbs = document.getElementById('bulbs');
+function drawBulbs(){
+  bulbs.innerHTML="";
+  const ring = document.createElement('div');
+  ring.style.position="relative";
+  ring.style.width="86%";
+  ring.style.aspectRatio="1/1";
+  ring.style.borderRadius="50%";
+  bulbs.appendChild(ring);
+  for(let i=0;i<bulbCount;i++){
+    const dot=document.createElement('span');
+    const a=i/bulbCount*360;
+    dot.style.position="absolute";
+    dot.style.width="10px";dot.style.height="10px";
+    dot.style.borderRadius="50%";
+    dot.style.background="radial-gradient(#fff,#bce1ff)";
+    dot.style.boxShadow="0 0 10px #bfe3ff, 0 0 2px #fff inset";
+    const r=48; // %
+    dot.style.left=`calc(50% + ${r}% * cos(${a}deg) - 5px)`;
+    dot.style.top =`calc(50% + ${r}% * sin(${a}deg) - 5px)`;
+    ring.appendChild(dot);
+  }
+}
+
+function drawWheel(a){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cx=center.x, cy=center.y;
+  const segN = segments.length;
+  const step = 2*Math.PI/segN;
+  // borde de fondo
   ctx.save();
-  ctx.translate(center.x, center.y);
-  ctx.rotate(angle);
-
-  // slices
-  for(let i=0;i<prizes.length;i++){
-    const a0 = i*seg - Math.PI/2;
-    const a1 = a0 + seg;
+  ctx.translate(cx,cy);
+  ctx.rotate(a);
+  for(let i=0;i<segN;i++){
+    // sector
+    const start=i*step, end=start+step;
     ctx.beginPath();
     ctx.moveTo(0,0);
-    ctx.arc(0,0, radius*0.86, a0, a1);
+    ctx.arc(0,0,radius,start,end);
     ctx.closePath();
-    ctx.fillStyle = colors[i%colors.length];
+    ctx.fillStyle = segColor(i);
     ctx.fill();
 
-    // texto
-    const mid = (a0+a1)/2;
+    // borde del sector
+    ctx.lineWidth=2;ctx.strokeStyle="#1a2849";
+    ctx.stroke();
+
+    // texto grande a lo largo
+    const mid=(start+end)/2;
     ctx.save();
-    ctx.rotate(mid);
-    ctx.translate(radius*0.6,0);
-    ctx.rotate(Math.PI/2);
-    ctx.fillStyle = "#0a0f2c";
-    ctx.lineWidth = 6;
-    ctx.font = `${Math.floor(size*0.05)}px 700 system-ui,Arial`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    // contorno blanco
-    ctx.strokeStyle="#fff";
-    ctx.strokeText(prizes[i],0,0);
-    ctx.fillText(prizes[i],0,0);
+    ctx.rotate(mid); // orientar al centro del sector
+    ctx.textAlign="center";
+    // tamaño en función del radio y longitud del gajo
+    const isMoney = segments[i].includes("$");
+    const fs = Math.max(16, Math.min(36, radius * (isMoney?0.13:0.12)));
+    ctx.font=`900 ${fs}px Montserrat, Arial`;
+    ctx.fillStyle="#0a1030";
+    // escribir de afuera hacia adentro
+    const text = segments[i];
+    // posición sobre el radio
+    ctx.translate(radius*0.65,0);
+    ctx.rotate(Math.PI/2); // a lo largo
+    ctx.fillText(text,0,0);
     ctx.restore();
   }
-
-  // aro exterior
+  // aro interior oscuro
   ctx.beginPath();
-  ctx.lineWidth = Math.max(8, size*0.02);
-  ctx.strokeStyle = "#4b516a";
-  ctx.arc(0,0, radius*0.92, 0, Math.PI*2);
-  ctx.stroke();
-
-  // luces
-  const bulbsR = radius*0.92;
-  const t = Date.now()/120;
-  for(let i=0;i<bulbs;i++){
-    const a = (i/bulbs)*Math.PI*2;
-    const x = Math.cos(a)*bulbsR;
-    const y = Math.sin(a)*bulbsR;
-    const on = Math.floor(t)%bulbs === i;
-    ctx.beginPath();
-    ctx.fillStyle = on ? "rgba(215,230,255,1)" : "rgba(215,230,255,.5)";
-    ctx.arc(x,y, Math.max(3, size*0.008), 0, Math.PI*2);
-    ctx.fill();
-  }
-
-  // centro
-  ctx.beginPath();
-  ctx.fillStyle="#0a0f2c";
-  ctx.arc(0,0, radius*0.15, 0, Math.PI*2);
+  ctx.fillStyle="#0b1326";
+  ctx.arc(cx,cy, radius*0.18,0,Math.PI*2);
   ctx.fill();
-  ctx.lineWidth = Math.max(4,size*0.01);
-  ctx.strokeStyle="#7da6ff";
-  ctx.stroke();
-
   ctx.restore();
 }
 
-function frame(){
-  if(velocity>0.0002){
-    angle += velocity;
-    velocity *= 0.985; // fricción
-    draw();
-    animId = requestAnimationFrame(frame);
-  }else{
-    velocity = 0;
-    spinning=false;
-    draw();
-    // premio bajo el puntero (puntero mira hacia -90°)
-    let a = (angle % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
-    const idx = Math.floor(((Math.PI*1.5 - a + Math.PI*2) % (Math.PI*2)) / seg) % prizes.length;
-    const prize = prizes[idx];
-    document.getElementById('badge').textContent = prize;
-    document.getElementById('resultTitle').textContent = '🎉 ¡Premio obtenido!';
-    document.getElementById('resultText').innerHTML = `Recibís <b>${prize}</b> en tu próxima carga.`;
-    if(soundOn){ try{winSfx.currentTime=0; winSfx.play();}catch(e){} }
-  }
-}
+/* ---------- spin ---------- */
+let angle = -Math.PI/2; // para que 0° esté arriba
+let spinning=false;
+const btnSpin = document.getElementById('btnSpin');
+const sndSpin = document.getElementById('sndSpin');
+const sndWin  = document.getElementById('sndWin');
+const soundState = document.getElementById('soundState');
+let muted = false;
+document.querySelector('.top .pill:last-child').addEventListener('click',()=>{
+  muted=!muted; soundState.textContent = muted?"OFF":"ON";
+  sndSpin.muted = sndWin.muted = muted;
+});
 
-/* ======== INTERACCIÓN ======== */
+function easeOutCubic(t){return 1-Math.pow(1-t,3)}
 function spin(){
   if(spinning) return;
-  spinning = true;
-  // velocidad inicial aleatoria (en rad/s)
-  velocity = 0.45 + Math.random()*0.35;
-  if(soundOn){ try{spinSfx.currentTime=0; spinSfx.play();}catch(e){} }
-  animId = requestAnimationFrame(frame);
+  if(sessionStorage.getItem('spun')==='1') return;
+  spinning=true; btnSpin.disabled=true;
+
+  // giro: entre 3 y 5 vueltas + desplazamiento al segmento ganador
+  const segN = segments.length;
+  const step = 2*Math.PI/segN;
+
+  // elegir índice ganador (pseudo-aleatorio)
+  const winIndex = Math.floor(Math.random()*segN);
+
+  // Queremos que al final el centro de winIndex quede a -90° (arriba)
+  const targetAngle = -Math.PI/2 - (winIndex*step + step/2);
+
+  const current = angle;
+  const extra = (Math.PI*2)* (3 + Math.random()*2); // vueltas extra
+  const final = targetAngle - extra;
+
+  const dur = 3500 + Math.random()*800;
+  const t0 = performance.now();
+  if(!muted){ try{sndSpin.currentTime=0; sndSpin.play();}catch{} }
+
+  function frame(t){
+    const p=Math.min(1,(t-t0)/dur);
+    angle = current + (final-current)*easeOutCubic(p);
+    drawWheel(angle);
+    if(p<1){ requestAnimationFrame(frame); }
+    else{
+      // normalizar para cálculo preciso
+      angle = ((angle % (2*Math.PI))+2*Math.PI)%(2*Math.PI);
+      const relative = ((-Math.PI/2 - angle)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+      const i = Math.floor(relative/step);
+      showWin(i);
+      sessionStorage.setItem('spun','1');
+      spinning=false;
+      if(!muted){ try{sndSpin.pause();sndWin.currentTime=0;sndWin.play();}catch{} }
+    }
+  }
+  requestAnimationFrame(frame);
 }
-document.getElementById('spinBtn').addEventListener('click', spin);
-// tocar la rueda también gira
-document.getElementById('wheelWrap').addEventListener('click', (e)=>{
-  const rect = e.currentTarget.getBoundingClientRect();
-  const cx = rect.left + rect.width/2;
-  const cy = rect.top + rect.height/2;
-  const dx = e.clientX - cx, dy = e.clientY - cy;
-  if(Math.hypot(dx,dy) < rect.width*0.5) spin();
-});
 
-/* ======== SONIDO / TIMER ======== */
-document.getElementById('soundToggle').addEventListener('click', ()=>{
-  soundOn = !soundOn;
-  document.getElementById('soundState').textContent = soundOn?'ON':'OFF';
-});
-let left=3600;
-setInterval(()=>{
-  if(left<=0) return; left--;
-  const h=String(Math.floor(left/3600)).padStart(2,'0');
-  const m=String(Math.floor((left%3600)/60)).padStart(2,'0');
-  const s=String(left%60).padStart(2,'0');
-  document.getElementById('timer').textContent = `${h}:${m}:${s}`;
-},1000);
-
-/* ======== WHATSAPP + ?pc ======== */
-const params=new URLSearchParams(location.search);
-const pc=params.get('pc');
-const whatsappByPc={1:'5491111111111',2:'5492222222222',3:'5493333333333'};
-const wa=whatsappByPc[pc]||whatsappByPc[1];
-
-function claim(){
-  const msg=encodeURIComponent('¡Quiero reclamar mi premio de la promo!');
-  window.open(`https://wa.me/${wa}?text=${msg}`,'_blank');
+function showWin(i){
+  const prize = segments[i];
+  document.getElementById('winBadge').textContent = prize;
+  document.getElementById('winText').textContent  = prize.includes('%')? (prize+" extra") : (prize+" en fichas");
+  btnSpin.disabled=true;
 }
-document.getElementById('claimBtn').addEventListener('click', claim);
-document.getElementById('waFloat').addEventListener('click', claim);
+
+btnSpin.addEventListener('click',spin);
+
+/* ---------- init ---------- */
+drawBulbs();
+resizeCanvas();
+
+// restaurar “1 giro”
+if(sessionStorage.getItem('spun')==='1'){ btnSpin.disabled=true; }
+
+/* ---------- enlaces auxiliares (si te sirven en otro lugar) ---------- */
+// Acceso a plataforma (si quisieras usarlo en un botón/header)
+const platformLink = LINKS.platform;
+// console.log("Plataforma PC", pc, platformLink);
 </script>
 </body>
 </html>
