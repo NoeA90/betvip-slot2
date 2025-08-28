@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>BET300 · Promo interactiva</title>
 <style>
   :root{
@@ -11,34 +11,33 @@
     --cta1:#ff2f55; --cta2:#ff8d3a; --cta3:#00c98b; --cta4:#37e06b;
     --rim:#444a62; --bulb:#d7e6ff; --accent:#00f0ff;
   }
-  *{box-sizing:border-box}  body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial}
   header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px}
   .logo{background:linear-gradient(45deg,var(--brand1),var(--brand2));padding:6px 16px;border-radius:12px;font-weight:900;color:#161616}
   .pill{display:inline-flex;gap:8px;align-items:center;background:linear-gradient(90deg,#1a2247,#27366a);padding:8px 12px;border-radius:14px;font-size:14px}
   .row{display:flex;gap:10px;align-items:center;padding:0 16px 8px}
 
-  /* Escena */
   .stage{margin:0 16px;background:#0b1231;border-radius:18px;padding:14px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
   .wheel-wrap{position:relative;max-width:520px;aspect-ratio:1/1;margin:6px auto}
-  .pointer{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:30px solid var(--accent);filter:drop-shadow(0 0 10px rgba(0,255,255,.55));z-index:3}
+  .pointer{position:absolute;left:50%;top:-6px;transform:translateX(-50%);
+    width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;
+    border-bottom:30px solid var(--accent);filter:drop-shadow(0 0 10px rgba(0,255,255,.55));z-index:3}
 
-  /* ROTACIÓN SEGURA EN MÓVIL: giro un contenedor HTML, no grupos del SVG */
+  /* Giro estable: rotamos un contenedor HTML */
   .rotator{position:absolute;inset:0;display:grid;place-items:center}
   .rotator-inner{width:100%;height:100%;transform-origin:50% 50%;will-change:transform}
 
-  /* SVG base */
   .wheel-svg{width:100%;height:100%}
   .rim{fill:var(--rim)}
   .bulb{fill:var(--bulb);opacity:.5} .bulb.on{opacity:1;filter:drop-shadow(0 0 6px rgba(215,230,255,.95))}
-  .sliceText{font-weight:900;fill:#0a0f2c;font-size:20px;paint-order:stroke;stroke:#fff;stroke-width:.6px}
-  @media (max-width:380px){ .sliceText{font-size:18px} }
+  /* Estética de gajos estilo referencia: colores vivos + texto grande con borde blanco */
+  .sliceText{font-weight:900;fill:#0a0f2c;font-size:22px;paint-order:stroke;stroke:#fff;stroke-width:.9px}
+  @media (max-width:380px){ .sliceText{font-size:20px} }
 
-  /* Panel resultado */
   .panel{max-width:520px;margin:10px auto 16px;background:var(--panel);border-radius:16px;padding:14px}
   .result-badge{display:inline-grid;place-items:center;width:90px;height:58px;border-radius:16px;background:linear-gradient(135deg,#253064,#3a1f78);font-weight:900;font-size:22px;margin-right:12px}
   .result-title{margin:0 0 8px;font-size:22px;font-weight:900}
 
-  /* CTA inferior */
   .cta{position:sticky;bottom:0;padding:10px 12px;background:linear-gradient(180deg,rgba(7,11,34,0),rgba(7,11,34,.9));backdrop-filter:blur(6px);display:flex;gap:10px}
   .btn{flex:1;min-height:56px;border:none;border-radius:14px;font-weight:900;color:#fff;font-size:18px;cursor:pointer}
   .btn:active{transform:translateY(1px)}
@@ -68,15 +67,12 @@
   <div class="wheel-wrap">
     <div class="pointer"></div>
 
-    <!-- Contenedor que GIRA -->
     <div class="rotator">
       <div class="rotator-inner" id="rotor">
         <svg class="wheel-svg" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" aria-label="ruleta">
-          <!-- Aro y luces -->
           <circle cx="300" cy="300" r="285" class="rim"/>
           <g id="bulbs"></g>
 
-          <!-- Disco -->
           <circle cx="300" cy="300" r="260" fill="#fff"/>
           <g id="slices"></g>
           <circle cx="300" cy="300" r="70" fill="#0a0f2c" stroke="#7da6ff" stroke-width="6"/>
@@ -101,43 +97,40 @@
   <button class="btn btn-claim" id="claimBtn">📲 Reclamar</button>
 </div>
 
-<!-- WhatsApp flotante -->
 <a class="wa" id="waFloat" aria-label="WhatsApp">
   <svg viewBox="0 0 32 32"><path d="M19.11 17.56c-.27-.14-1.61-.8-1.86-.89-.25-.09-.43-.14-.61.14s-.7.89-.86 1.08c-.16.2-.32.2-.59.07-.27-.14-1.14-.42-2.17-1.35-.8-.71-1.35-1.6-1.51-1.87-.16-.27-.02-.42.12-.56.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.83-2.02-.22-.53-.45-.46-.61-.46h-.52c-.18 0-.48.07-.73.34s-.96.94-.96 2.29 1 2.65 1.14 2.83c.14.18 1.96 2.98 4.75 4.18.66.29 1.18.46 1.58.59.66.21 1.27.18 1.75.11.53-.08 1.61-.66 1.84-1.29.23-.63.23-1.17.16-1.29-.07-.12-.25-.2-.52-.34zM16.02 3.2C9.84 3.2 4.82 8.21 4.82 14.4c0 2.35.76 4.53 2.04 6.31L5.2 28.8l8.28-1.62c1.73.95 3.71 1.49 5.82 1.49 6.18 0 11.2-5.01 11.2-11.2S22.2 3.2 16.02 3.2z"/></svg>
 </a>
 
 <script>
-/* ==================== CONFIG ==================== */
+/* ========= CONFIG ========= */
 const prizes = [
   "$2.000","$3.000","10%","$4.000","20%","$5.000",
   "30%","$6.000","40%","$7.000","$8.000","$9.000","$10.000","50%"
 ];
-// colores intercalados (más llamativos)
-const colors = ["#bfe7ff","#ffc7f2","#b8ffdf","#ffe5a3"];
+// Paleta tipo referencia (más punch)
+const colors = ["#bfe7ff","#ffc7f2","#b8ffdf","#ffe5a3","#c9b2ff","#a6f2ff"];
 const seg = 360/prizes.length;
 const bulbsCount = 48;
 
 const rotor = document.getElementById('rotor');
 let spinning=false, soundOn=true, totalRot=0;
 
-/* ==================== DIBUJO ==================== */
+/* ========= DIBUJO ========= */
 const slices = document.getElementById('slices');
 for(let i=0;i<prizes.length;i++){
-  const start = (i*seg-90)*Math.PI/180;
-  const end   = ((i+1)*seg-90)*Math.PI/180;
+  // offset -90° para que el gajo 0 quede centrado arriba cuando rot=0
+  const start = (i*seg-90)*Math.PI/180, end=((i+1)*seg-90)*Math.PI/180;
   const rO=260, rI=80;
   const x1=300+Math.cos(start)*rO, y1=300+Math.sin(start)*rO;
   const x2=300+Math.cos(end)*rO,   y2=300+Math.sin(end)*rO;
   const x3=300+Math.cos(end)*rI,   y3=300+Math.sin(end)*rI;
   const x4=300+Math.cos(start)*rI, y4=300+Math.sin(start)*rI;
-  const large= seg>180?1:0;
 
   const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('d',`M ${x1} ${y1} A ${rO} ${rO} 0 ${large} 1 ${x2} ${y2} L ${x3} ${y3} A ${rI} ${rI} 0 ${large} 0 ${x4} ${y4} Z`);
+  path.setAttribute('d',`M ${x1} ${y1} A ${rO} ${rO} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${rI} ${rI} 0 0 0 ${x4} ${y4} Z`);
   path.setAttribute('fill', colors[i%colors.length]);
   slices.appendChild(path);
 
-  // Texto bien centrado
   const mid=(start+end)/2, tx=300+Math.cos(mid)*168, ty=300+Math.sin(mid)*168;
   const t = document.createElementNS('http://www.w3.org/2000/svg','text');
   t.setAttribute('x',tx); t.setAttribute('y',ty);
@@ -165,47 +158,61 @@ setInterval(()=>{
   bulbIndex++;
 },90);
 
-/* ==================== AUDIO ==================== */
+/* ========= AUDIO ========= */
 const spinSfx = new Audio('https://cdn.jsdelivr.net/gh/jackyzha0/sfx/spin.mp3');
 const winSfx  = new Audio('https://www.soundjay.com/human/sounds/applause-8.mp3');
+const tickSfx = new Audio('https://cdn.jsdelivr.net/gh/sfxr/sfx/tick.mp3'); // tick suave
+tickSfx.volume = .35;
 
-/* ==================== GIRO (rotación del DIV) ==================== */
+/* ========= SPIN CALIBRADO (rápido) ========= */
+let tickTimer=null;
+function startTicks(){
+  if(!soundOn) return;
+  stopTicks();
+  tickTimer=setInterval(()=>{ try{tickSfx.currentTime=0; tickSfx.play()}catch(e){} },90);
+}
+function stopTicks(){ if(tickTimer){ clearInterval(tickTimer); tickTimer=null; } }
+
 function spin(){
   if(spinning) return;
   spinning=true;
-  const delta = 360*5 + Math.floor(Math.random()*360);
+
+  // Elegimos un índice ganador al azar y alineamos el centro del gajo con la punta
+  const idx = Math.floor(Math.random()*prizes.length);
+  const align = (360 + 90 - ((idx+0.5)*seg)) % 360; // centro del gajo bajo el triángulo
+  const delta = 360*6 + align;                      // 6 vueltas y “tope” calibrado
   totalRot = (totalRot + delta) % 360;
 
-  rotor.style.transition = 'transform 4s cubic-bezier(.17,.67,.83,.67)';
+  rotor.style.transition = 'transform 2.6s cubic-bezier(.2,.85,.2,1)'; // más veloz
   rotor.style.transform  = `rotate(${totalRot}deg)`;
+
   if(soundOn){ try{spinSfx.currentTime=0;spinSfx.play()}catch(e){} }
+  startTicks();
 
   setTimeout(()=>{
     rotor.style.transition='transform 0s';
     rotor.style.transform = `rotate(${totalRot}deg)`;
+    stopTicks();
 
-    const idx = Math.floor((totalRot % 360)/seg) % prizes.length;
     const prize = prizes[idx];
-
     document.getElementById('badge').textContent = prize;
     document.getElementById('resultTitle').textContent = '🎉 ¡Premio obtenido!';
     document.getElementById('resultText').innerHTML = `Recibís <b>${prize}</b> en tu próxima carga.`;
 
     if(soundOn){ try{winSfx.currentTime=0;winSfx.play()}catch(e){} }
     spinning=false;
-  },4000);
+  },2600);
 }
 
 document.getElementById('spinBtn').addEventListener('click', spin);
 document.querySelector('.wheel-wrap').addEventListener('click', (e)=>{
-  // tocar la rueda también gira
   const box = e.currentTarget.getBoundingClientRect();
   const cx = box.left + box.width/2, cy = box.top + box.height/2;
   const dx = e.clientX - cx, dy = e.clientY - cy;
   if(Math.hypot(dx,dy) < box.width*0.5) spin();
 });
 
-/* ==================== SONIDO / TIMER ==================== */
+/* ========= SONIDO / TIMER ========= */
 document.getElementById('soundToggle').addEventListener('click', ()=>{
   soundOn = !soundOn;
   document.getElementById('soundState').textContent = soundOn?'ON':'OFF';
@@ -219,7 +226,7 @@ setInterval(()=>{
   document.getElementById('timer').textContent = `${h}:${m}:${s}`;
 },1000);
 
-/* ==================== WHATSAPP + ?pc ==================== */
+/* ========= WHATSAPP + ?pc ========= */
 const params=new URLSearchParams(location.search);
 const pc=params.get('pc');
 const whatsappByPc={1:'5491111111111',2:'5492222222222',3:'5493333333333'};
@@ -233,7 +240,7 @@ function claim(){
 }
 document.getElementById('claimBtn').addEventListener('click', claim);
 document.getElementById('waFloat').addEventListener('click', claim);
-// si querés usar "platform" en un botón adicional, ya está listo en esta variable.
+// "platform" queda disponible por si querés linkear acceso a la plataforma en otro botón/etiqueta.
 </script>
 </body>
 </html>
