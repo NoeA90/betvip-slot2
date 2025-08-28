@@ -22,15 +22,32 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;background:
   border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 15px 40px rgba(0,0,0,.35)}
 @media(max-width:520px){.container{padding:0 0 92px}.card{border-radius:0;border-left:0;border-right:0;padding:14px}}
 .head{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
-.brand{height:28px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+
+/* === BET300 más grande con badge naranja (estilo botón plataforma) === */
+.brand{
+  display:inline-block;
+  height:36px;
+  padding:6px 10px;
+  border-radius:12px;
+  background:linear-gradient(90deg,#ffd166,#ff7ab6);
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,.4));
+}
+
+/* si por algún motivo no carga el logo svg, que el texto se vea bien dentro del badge */
+.brand[alt="BET300"]{color:#0a1020;font-weight:900;line-height:1;}
+
+/* Pills existentes */
 .pill{background:linear-gradient(90deg,rgba(124,77,255,.15),rgba(0,209,255,.15));border:1px solid var(--border);
   border-radius:999px;padding:6px 10px;font-size:12px;color:var(--muted)}
 .pill.time{display:flex;gap:8px;align-items:center}
 .pill.sound{cursor:pointer;user-select:none}
 .count{display:inline-flex;gap:6px;align-items:center;padding:4px 8px;border-radius:999px;background:rgba(255,204,0,.15);
   border:1px solid rgba(255,204,0,.35);color:#ffe27a;font-weight:700;font-variant-numeric:tabular-nums}
+
 .grid{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
 @media(min-width:900px){.grid{grid-template-columns:1.15fr .85fr}}
+
 .stage{position:relative;display:flex;align-items:center;justify-content:center}
 .wrap{width:100%;max-width:520px;margin:auto;position:relative}
 canvas{width:100%;height:auto;display:block}
@@ -38,12 +55,15 @@ canvas{width:100%;height:auto;display:block}
   border-left:16px solid transparent;border-right:16px solid transparent;border-bottom:26px solid var(--pointer);z-index:2;
   filter:drop-shadow(0 4px 10px rgba(34,211,238,.35))}
 @media(max-width:420px){.pointer{border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:22px solid var(--pointer);top:4px}}
+
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px}
 .center{text-align:center}
 h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px} .muted{color:var(--muted)}
 .stat{display:flex;gap:12px;align-items:center;justify-content:center;margin:8px 0 14px}
 .badge{min-width:72px;height:46px;border-radius:12px;background:radial-gradient(100% 100% at 50% 0%, rgba(0,209,255,.35), rgba(124,77,255,.35));
   display:grid;place-items:center;font-weight:800;font-size:18px;box-shadow:inset 0 0 10px rgba(124,77,255,.35)}
+
+/* Bloque plataforma (igual) */
 .promo{display:grid;grid-template-columns:1fr minmax(200px,260px);align-items:center;gap:12px;margin-top:10px;padding:12px;border:1px dashed var(--border);border-radius:12px}
 .promo.expired{border-color:rgba(255,107,107,.5)}
 .promo .copy{display:grid;gap:4px}
@@ -51,6 +71,8 @@ h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px} .muted{color:var(--muted)}
 .btn.play{display:inline-flex;gap:10px;align-items:center;justify-content:center;padding:14px 16px;border-radius:12px;font-weight:800;
   background:linear-gradient(90deg,#ffd166,#ff7ab6);color:#0a1020;box-shadow:0 8px 20px rgba(0,0,0,.25)}
 @media(max-width:520px){.promo{grid-template-columns:1fr}.btn.play{width:100%}}
+
+/* Dock inferior (igual) */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:10;background:linear-gradient(180deg, rgba(11,15,30,0) 0%, rgba(11,15,30,.85) 22%, rgba(11,15,30,.95) 100%);
   padding:10px 16px 14px;display:flex;gap:12px;align-items:center}
 .btn{appearance:none;border:none;cursor:pointer;padding:14px 16px;border-radius:14px;font-weight:800;background:linear-gradient(90deg,#6c59ff,#00d1ff);color:#0a1020;width:100%;
@@ -58,7 +80,7 @@ h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px} .muted{color:var(--muted)}
 .btn:disabled{opacity:.55;cursor:not-allowed}
 .btn.ok{background:#25D366;color:#0b0f1e}
 
-/* === SOLO cambio de color para el botón “Girar” === */
+/* Naranja para “Girar” (sin tocar los demás) */
 #spinBtn{
   background: linear-gradient(90deg,#FF9A3D,#FF5C39);
   color:#0b0f1e;
@@ -66,14 +88,28 @@ h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px} .muted{color:var(--muted)}
 #spinBtn:disabled{
   background: linear-gradient(90deg,#FFBC82,#FF8C78);
 }
+
+/* === Confetti (papelitos) === */
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:40}
+.confetti i{
+  position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;opacity:0;
+  animation:confFall 1.6s linear forwards;
+}
+@keyframes confFall{
+  8%{opacity:1}
+  100%{transform:translateY(110vh) rotate(360deg);opacity:0}
+}
 </style>
 </head>
 <body>
+
+<!-- contenedor de confetti -->
+<div id="confetti" class="confetti" aria-hidden="true"></div>
+
 <div class="container">
   <div class="card">
     <div class="head">
-      <img class="brand" src="img/logo-bet300.svg" alt="BET300" onerror="this.outerHTML='<strong>BET300</strong>'">
-      <!-- SOLO se cambia el texto de esta pastilla -->
+      <img class="brand" src="img/logo-bet300.svg" alt="BET300" onerror="this.outerHTML='<strong class=&quot;brand&quot;>BET300</strong>'">
       <span class="pill">Promo interactiva</span>
       <span class="pill time">⚡ Tiempo limitado <span class="count" id="countdown">--:--</span></span>
       <span class="pill sound" id="soundToggle">🔊 Sonido: <b id="soundState">ON</b></span>
@@ -176,6 +212,7 @@ const wheel=document.getElementById('wheel'), ctx=wheel.getContext('2d');
 const spinBtn=document.getElementById('spinBtn'), claimBtn=document.getElementById('claimBtn');
 const badge=document.getElementById('badge'), title=document.getElementById('title'), subtitle=document.getElementById('subtitle');
 const countdownEl=document.getElementById('countdown'), promoBox=document.getElementById('promoBox');
+const confetti = document.getElementById('confetti');
 
 let angle=0, spinning=false, cx,cy,r, cssW=0;
 
@@ -284,6 +321,23 @@ function tickCountdown(){
   return false;
 }
 
+/* ===== Confetti ===== */
+function confettiBurst(){
+  confetti.innerHTML='';
+  const n = 28;
+  for(let i=0;i<n;i++){
+    const p=document.createElement('i');
+    p.style.left = (Math.random()*100)+'vw';
+    p.style.animationDelay = (Math.random()*0.5)+'s';
+    // dos gamas de color para variar
+    p.style.background = Math.random()<.5
+      ? 'linear-gradient(#80ffea,#4e9cff)'
+      : 'linear-gradient(#ffd166,#ff3d7f)';
+    confetti.appendChild(p);
+  }
+  setTimeout(()=>{confetti.innerHTML='';}, 1800);
+}
+
 /* ===== Spin (con audio WebAudio) ===== */
 let stopTicks=null;
 document.addEventListener('click',()=>AudioKit.unlock(),{once:true}); // “desbloqueo” general
@@ -306,6 +360,7 @@ spinBtn.addEventListener('click', ()=>{
     const msg=whatsappText(prize); claimBtn.onclick=()=>location.href=`https://wa.me/${WP}?text=${encodeURIComponent(msg)}`;
     localStorage.setItem('spin_done','1'); localStorage.setItem('spin_prize',JSON.stringify(prize)); localStorage.setItem('spin_date',todayKey());
     if(soundOn){ if(stopTicks) stopTicks(); AudioKit.win(); }
+    confettiBurst(); // <<--- papelitos al ganar
     spinning=false;
   });
 });
