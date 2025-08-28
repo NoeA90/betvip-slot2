@@ -29,7 +29,7 @@ body::before{
     radial-gradient(900px 400px at 100% 0%, rgba(0,209,255,.18), transparent 60%);
 }
 
-/* monedas flotando decorativas */
+/* monedas flotando */
 .coin{position:fixed; width:22px; height:22px; border-radius:50%;
   background: radial-gradient(circle at 30% 30%, #fff6, transparent 55%),
               radial-gradient(circle at 50% 50%, var(--gold1), var(--gold2));
@@ -124,6 +124,17 @@ h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px}
 .btn.ok{background:linear-gradient(90deg,#4dffb3,#12e57c);color:#072015;text-shadow:0 1px 0 #d9ffe6}
 .btn.play{background:linear-gradient(90deg,#ffd166,#ff7ab6);color:#1b0a12}
 
+/* 👇 Atención en Reclamar (latido cuando tiene .pulse y NO está disabled) */
+.btn.ok.pulse:not(:disabled){
+  animation:whapulse 1.25s ease-in-out infinite;
+  box-shadow:0 0 0 rgba(37,211,102,.0);
+}
+@keyframes whapulse{
+  0%  { transform:scale(1);   box-shadow:0 0 0 0 rgba(37,211,102,.55); }
+  50% { transform:scale(1.035); box-shadow:0 0 24px 12px rgba(37,211,102,.18); }
+  100%{ transform:scale(1);   box-shadow:0 0 0 0 rgba(37,211,102,.0); }
+}
+
 /* bloque persuasivo */
 .promo{display:flex;align-items:flex-start;gap:12px;margin-top:12px;padding:14px;border:1px dashed #2a2f67;border-radius:12px;background:linear-gradient(180deg,rgba(255,204,0,.06),rgba(0,0,0,0))}
 .promo.expired{border-color:rgba(255,107,107,.55);background:linear-gradient(180deg,rgba(255,107,107,.07),rgba(0,0,0,0))}
@@ -138,21 +149,18 @@ h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px}
 .confetti i{position:absolute;width:10px;height:14px;opacity:0;top:-20px;border-radius:2px;animation:drop 1.6s linear forwards;transform:rotate(360deg)}
 @keyframes drop{8%{opacity:1}100%{transform:translateY(110vh) rotate(360deg);opacity:0}}
 
-/* floating WA con logo */
+/* floating WA */
 .fab{
   position:fixed;right:16px;bottom:16px;z-index:70;
   background:#25D366;border:none;border-radius:999px;
   padding:14px 18px;display:flex;align-items:center;gap:10px;
   box-shadow:0 16px 40px rgba(0,0,0,.55);cursor:pointer;
 }
-.fab img.wa-icon{
-  width:34px;height:34px;display:block;
-  filter:drop-shadow(0 2px 4px rgba(0,0,0,.35));
-}
+.fab img.wa-icon{ width:34px;height:34px;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35)); }
 .fab span{font-weight:900;color:#0b0f1e;text-shadow:0 1px 0 #fff9}
 @media(max-width:420px){
-  .fab span{display:none}          /* móvil: solo el logo */
-  .fab img.wa-icon{width:46px;height:46px} /* logo más grande en móvil */
+  .fab span{display:none}
+  .fab img.wa-icon{width:46px;height:46px}
 }
 .fab:disabled{opacity:.6;cursor:not-allowed}
 </style>
@@ -203,27 +211,36 @@ h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px}
           </div>
         </div>
 
+        <!-- 🎰 Girar + Reiniciar -->
         <div class="row" style="margin-top:8px">
           <button id="spinBtn" class="btn">🎰 Girar ahora</button>
           <button id="resetBtn" class="btn secondary" title="Solo pruebas locales">Reiniciar</button>
         </div>
 
-        <button id="claimBtn" class="btn ok" style="margin-top:10px" disabled>📲 Reclamar por WhatsApp</button>
+        <!-- 📲 Reclamar (latido al habilitar) -->
+        <div class="row">
+          <button id="claimBtn" class="btn ok" disabled>📲 Reclamar por WhatsApp</button>
+        </div>
 
+        <!-- Bloque persuasivo -->
         <div class="promo" id="promoBox">
           <span class="dot" aria-hidden="true"></span>
           <div style="flex:1">
             <strong>Beneficio por tiempo limitado.</strong><br>
             <small>Entrá ahora y reclamá antes de que termine el contador.</small>
           </div>
-          <button id="playNow" class="btn play" style="margin-left:auto;padding:10px 14px;white-space:nowrap">🎮 Entrar a la plataforma</button>
+        </div>
+
+        <!-- 🎮 Entrar a la plataforma -->
+        <div class="row">
+          <button id="playNow" class="btn play">🎮 Entrar a la plataforma</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Floating WA con logo grande -->
+<!-- Floating WA -->
 <button id="fabWA" class="fab" disabled>
   <img src="img/logo-wa.svg" alt="WhatsApp" class="wa-icon" onerror="this.outerHTML='💬'">
   <span>Chatear ahora</span>
@@ -231,8 +248,6 @@ h1,h2,h3,p{margin:0 0 8px} h1{font-size:24px}
 
 <script>
 /* ========= Config ========= */
-
-/* Premios intercalados: $ y % */
 const AMOUNTS = [2000,3000,4000,5000,6000,7000,8000,9000,10000];
 const PERCENTS = [10,20,30,40,50];
 const PRIZES = [];
@@ -243,15 +258,10 @@ const PRIZES = [];
     if (PERCENTS[i]!==undefined) PRIZES.push({type:'%', value:PERCENTS[i]});
   }
 })();
-
-/* paleta “casino” */
 const COLORS = ["#4df0ff","#7a5bff","#1ce9b8","#ff6ad5","#ffd166","#4be1a0","#8ab6ff","#ff9bd1","#7cf7ad","#ffc6a5","#c7b2ff","#a7f0ff","#ffd6f0","#fff3a6"];
 
-/* WhatsApp por PC */
 const WP_NUMBERS = { principal:"5491157737173", pc1:"5491138601132", pc2:"5491138214312", pc3:"5491168392647" };
 const WP_MSG_TEMPLATE = "Hola! Quiero reclamar mi premio: %PRIZE%. Llegué desde %SOURCE%.";
-
-/* Plataforma por PC */
 const PLATFORM_LINKS = { principal:"https://plataforma.example/inicio", pc1:"https://c01.bet300vip.com/", pc2:"https://c02.bet300vip.com/", pc3:"https://c03.bet300vip.com/" };
 
 /* ========= Estado/UI ========= */
@@ -273,7 +283,7 @@ const soundBtn = document.getElementById('soundBtn');
 const soundIcon= document.getElementById('soundIcon');
 const soundLabel=document.getElementById('soundLabel');
 
-let angle=0, spinning=false, cx,cy,r, cssW=0, rafId=null;
+let angle=0, spinning=false, cx,cy,r, cssW=0;
 
 /* Fecha hoy */
 (function(){ const d=new Date(); const fmt=new Intl.DateTimeFormat('es-AR',{day:'2-digit',month:'2-digit'}).format(d);
@@ -292,7 +302,7 @@ if(pc==='2') PLATFORM = PLATFORM_LINKS.pc2 || PLATFORM;
 if(pc==='3') PLATFORM = PLATFORM_LINKS.pc3 || PLATFORM;
 playNow.onclick = ()=> window.open(PLATFORM,'_blank','noopener');
 
-/* ====== Sonido ON/OFF (persistente) ====== */
+/* ====== Sonido ON/OFF ====== */
 const MUTE_KEY='sound_muted';
 let isMuted = localStorage.getItem(MUTE_KEY)==='1';
 function renderSoundUI(){
@@ -311,7 +321,7 @@ soundBtn.addEventListener('click', ()=>{
 });
 renderSoundUI();
 
-/* Construye mensaje WA con UTM/source */
+/* Mensaje WA con UTM/source */
 function waMessageFor(prizeText){
   const source = (params.get('utm_source')||'meta').toUpperCase();
   return WP_MSG_TEMPLATE.replace('%PRIZE%', prizeText).replace('%SOURCE%', source);
@@ -324,14 +334,14 @@ function setSize(){
   wheel.width=Math.floor(w*dpr); wheel.height=Math.floor(w*dpr); wheel.style.width=w+'px'; wheel.style.height=w+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0); cx=wheel.width/dpr/2; cy=wheel.height/dpr/2; r=Math.min(cx,cy)-12;
 }
-addEventListener('resize', ()=>{ clearTimeout(window.__wTo); window.__wTo=setTimeout(()=>{ setSize(); },120) });
+addEventListener('resize', ()=>{ clearTimeout(window.__wTo); window.__wTo=setTimeout(setSize,120) });
 
 /* ========= Dibujo ruleta y luces ========== */
 function draw(a,t){
   ctx.clearRect(0,0,wheel.width,wheel.height);
   const n=PRIZES.length, arc=Math.PI*2/n;
 
-  // aro metálico
+  // aro
   const rimOuter=r, rimInner=r-16;
   const grad=ctx.createLinearGradient(cx-r,cy-r,cx+r,cy+r);
   grad.addColorStop(0,'#f7f7ff'); grad.addColorStop(.5,'#c9d2ff'); grad.addColorStop(1,'#eef1ff');
@@ -364,30 +374,18 @@ function draw(a,t){
   cgrad.addColorStop(0,'rgba(22,241,255,.45)'); cgrad.addColorStop(1,'rgba(22,241,255,0)');
   ctx.beginPath(); ctx.arc(cx,cy,centerR+10,0,Math.PI*2); ctx.fillStyle=cgrad; ctx.fill();
 
-  // luces marquesina
-  const bulbs=48, radius=r-8; const speed= (t||0)/340;
+  // luces
+  const bulbs=48, radius=r-8; const speed=(t||0)/340;
   for(let i=0;i<bulbs;i++){
-    const th = i*(Math.PI*2/bulbs);
-    const x = cx + radius*Math.cos(th), y = cy + radius*Math.sin(th);
-    const phase = (i/3 + speed)%1;
-    const on = phase<.5;
+    const th=i*(Math.PI*2/bulbs);
+    const x=cx+radius*Math.cos(th), y=cy+radius*Math.sin(th);
+    const on=((i/3 + speed)%1) < .5;
     ctx.beginPath(); ctx.arc(x,y, on?4.2:3.2, 0, Math.PI*2);
     ctx.fillStyle = on? 'rgba(255,241,180,.95)' : 'rgba(255,220,120,.35)';
     ctx.fill();
   }
 }
-
-/* animación continua */
-function startMarquee(){
-  let last=0;
-  function loop(ts){
-    if(!last) last=ts;
-    draw(angle, ts);
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
-}
-startMarquee();
+(function loop(ts){ draw(angle,ts); requestAnimationFrame(loop); })();
 
 /* Helpers ángulos */
 const TWO_PI=Math.PI*2, pointerAngle=Math.PI*1.5, norm=rad=> ((rad%TWO_PI)+TWO_PI)%TWO_PI;
@@ -448,7 +446,6 @@ function animateTo(target, ms, cb){
 /* Premio */
 function prizeText(p){ return p.type==='%'? (p.value+"% extra") : ("$"+p.value.toLocaleString("es-AR")+" en fichas"); }
 function setWon(prize){
-  // vibración en móvil
   if (navigator.vibrate) { navigator.vibrate([80, 40, 80]); }
   winSound();
 
@@ -457,6 +454,9 @@ function setWon(prize){
   titleEl.textContent="🎉 ¡Premio obtenido!";
   subtitle.innerHTML=`Recibís <b>${txt}</b> con tu próxima carga.`;
   claimBtn.disabled=false; fabWA.disabled=false;
+
+  /* 🔔 activa latido en Reclamar */
+  claimBtn.classList.add('pulse');
 
   const msg=waMessageFor(txt), urlMsg=encodeURIComponent(msg+utmFromQuery());
   claimBtn.onclick=()=> location.href=`https://wa.me/${WP}?text=${urlMsg}`;
@@ -474,7 +474,7 @@ function utmFromQuery(){
 document.getElementById('resetBtn').addEventListener('click', ()=>{
   localStorage.removeItem('spin_done'); localStorage.removeItem('spin_prize'); angle=0;
   badge.textContent='-'; titleEl.textContent="Tenés 1 giro disponible"; subtitle.innerHTML='Los premios se acreditan con tu <b>próxima carga mínima</b>.';
-  claimBtn.disabled=true; fabWA.disabled=false; spinBtn.disabled=false;
+  claimBtn.disabled=true; claimBtn.classList.remove('pulse'); fabWA.disabled=false; spinBtn.disabled=false;
 });
 
 /* UI utils */
@@ -486,7 +486,7 @@ function confettiBurst(){
   setTimeout(()=> confetti.innerHTML='', 1800);
 }
 
-/* Deadline 23:59 local (persistente por día) */
+/* Deadline 23:59 local */
 const DEADLINE_KEY='promo_end_ts';
 function computeToday2359(){
   const now=new Date();
@@ -519,7 +519,7 @@ function tickCountdown(){
   return false;
 }
 
-/* Init visual + rueda */
+/* Init */
 setSize();
 tickCountdown();
 const __interval=setInterval(()=>{ if(tickCountdown()) clearInterval(__interval); }, 1000);
