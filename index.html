@@ -1,464 +1,376 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>BET300 · Promo interactiva</title>
-<meta name="theme-color" content="#0b0f1e" />
+<meta name="theme-color" content="#0b0f1e"/>
+
+<!-- Meta Pixel base (reemplazá por tu ID) -->
+<script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', 'YOUR_PIXEL_ID');     /* ← tu Pixel */
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+
 <style>
 :root{
-  --bg:#0b0f1e; --panel:#0f1330; --card:#11183a; --border:#1d2250;
-  --text:#e9ecff; --muted:#b7b9d6; --ok:#25D366; --accent:#22d3ee; --gold:#ffd166;
-  --ring:#b7c4ff;
+  --bg:#0b0f1e; --panel:#111631; --panel2:#0e132f; --border:#1d2250;
+  --text:#e8ebff; --muted:#b8bee6; --accent:#22d3ee; --accent2:#7c4dff; --ok:#25D366;
 }
 *{box-sizing:border-box} html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--text);font:16px/1.35 system-ui,-apple-system,Segoe UI,Roboto}
-body::before{
-  content:"";position:fixed;inset:0;z-index:-2;
-  background:
-    radial-gradient(1000px 600px at 50% -5%, rgba(101,74,255,.25), transparent),
-    radial-gradient(600px 300px at 100% 0%, rgba(0,209,255,.18), transparent),
-    linear-gradient(180deg,#0b0f1e 0%,#0b0f1e 55%,#0a0d20 100%);
-}
-.container{max-width:980px;margin:0 auto;padding:18px 14px 120px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
-.header{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:16px;border-radius:18px 18px 0 0}
-.brand{background:linear-gradient(90deg,#ffb86b,#ff7ab6);color:#0a0f22;border-radius:12px;padding:8px 14px;font-weight:900;letter-spacing:.3px}
-.pill{border:1px solid var(--border);border-radius:999px;padding:6px 10px;color:var(--muted);background:linear-gradient(90deg,rgba(124,77,255,.15),rgba(0,209,255,.15))}
-.pill .tag{font-weight:800;color:#fff}
-.badge-box{display:flex;gap:12px;align-items:center}
-.switch{display:flex;align-items:center;gap:8px}
-.switch .dot{width:46px;height:26px;border-radius:999px;background:#14304d;position:relative;border:1px solid #1b3150;cursor:pointer}
-.switch .dot::after{content:"";position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#76e5ff;transition:.2s}
-.switch.on .dot{background:#193a6c}
-.switch.on .dot::after{left:22px;background:#a6f0ff}
-.timer{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border-radius:999px;background:rgba(255,204,0,.15);border:1px solid rgba(255,204,0,.35);color:#ffe27a;font-weight:800}
+body{margin:0;color:var(--text);background:var(--bg);font:16px/1.35 system-ui,-apple-system,Segoe UI,Roboto}
 
-.grid{display:grid;gap:16px}
+/* header pills */
+.container{max-width:980px;margin:0 auto;padding:16px}
+.card{background:var(--panel2);border:1px solid var(--border);border-radius:18px;padding:14px}
+.pill{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;
+  background:linear-gradient(90deg,rgba(124,77,255,.14),rgba(0,209,255,.14)); color:var(--muted);font-size:12px;margin-right:8px}
+.brand{display:inline-block;background:linear-gradient(90deg,#ffb36b,#ff7ab6);color:#0b0f1e;
+  font-weight:900;border-radius:16px;padding:8px 14px;margin-right:8px}
+
+/* grid */
+.grid{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
 @media(min-width:900px){.grid{grid-template-columns:1.1fr .9fr}}
 
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px}
-.stage{position:relative;display:flex;justify-content:center;align-items:center}
+/* stage */
+.stage{position:relative;display:flex;align-items:center;justify-content:center}
 .wrap{width:100%;max-width:560px;margin:auto}
-canvas{width:100%;height:auto;display:block}
+canvas{width:100%;height:auto;display:block;border-radius:22px}
 
+/* pointer */
 .pointer{
-  position:absolute; top:14px; left:50%; transform:translateX(-50%);
-  width:0; height:0; z-index:3;
-  border-left:16px solid transparent; border-right:16px solid transparent; border-bottom:28px solid var(--accent);
-  filter:drop-shadow(0 6px 14px rgba(34,211,238,.4));
+  position:absolute; top:22px; left:50%; transform:translateX(-50%);
+  width:0; height:0; border-left:18px solid transparent;border-right:18px solid transparent;border-bottom:28px solid var(--accent);
+  filter:drop-shadow(0 6px 12px rgba(34,211,238,.35)); z-index:2;
 }
 
-.titleBox{display:flex;align-items:center;gap:14px}
-.kpi{width:82px;height:54px;border-radius:14px;display:grid;place-items:center;font-weight:900;font-size:20px;
-  background:radial-gradient(100% 120% at 50% 0%, rgba(0,209,255,.35), rgba(124,77,255,.35));
-  box-shadow:inset 0 0 10px rgba(124,77,255,.35)
-}
-h1{margin:0;font-size:26px}
-p{margin:8px 0 0}
+/* right panel */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px}
+.h1{font-size:24px;font-weight:800;margin:0 0 8px}
 .muted{color:var(--muted)}
 
-.btn{appearance:none;border:none;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer}
-.btn.gradient{background:linear-gradient(90deg,#ffa861,#ff5fa3);color:#0b0f1e}
-.btn.secondary{background:#1a1f4a;color:var(--text);border:1px solid var(--border)}
-.btn.ok{background:var(--ok);color:#0b0f1e}
-.row{display:flex;gap:10px;flex-wrap:wrap}
+/* stat badge */
+.badge{display:inline-grid;place-items:center;width:82px;height:52px;border-radius:12px;
+  background:radial-gradient(120% 120% at 50% 0%, rgba(0,209,255,.25), rgba(124,77,255,.25));
+  font-weight:800;font-size:18px;margin-right:10px}
 
-.note{
-  display:flex;align-items:center;gap:12px;margin-top:12px;padding:12px;border:1px dashed var(--border);border-radius:14px;
-  background:linear-gradient(180deg,rgba(255,204,0,.07),rgba(0,0,0,0))
+/* buttons */
+.btn{appearance:none;border:0;cursor:pointer;border-radius:14px;font-weight:800;color:#0d132a;
+  padding:14px 16px;background:linear-gradient(90deg,#ffb36b,#ff7ab6);box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.btn.secondary{background:#19214b;color:var(--text);border:1px solid var(--border)}
+.btn.ok{background:var(--ok);color:#08220e}
+.btn.block{width:100%}
+
+/* sticky mobile CTA row */
+.cta-row{
+  position:sticky; bottom:0; left:0; right:0; z-index:30; padding:12px;
+  background:linear-gradient(180deg,rgba(10,12,25,0),rgba(10,12,25,.85) 35%, rgba(10,12,25,.95));
+  display:flex; gap:12px;
 }
-.note .dot{width:8px;height:8px;border-radius:50%;background:#ffcc00}
-.note .cta{margin-left:auto}
-.link-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:linear-gradient(90deg,#ffd166,#ff7ab6);color:#0b0f1e;text-decoration:none;font-weight:900;border:1px solid rgba(0,0,0,.15)}
+.cta-row .btn{flex:1}
 
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#10162c;color:#e8ebff;border:1px solid var(--border);
-  border-radius:10px;padding:10px 14px;font-size:14px;opacity:0;transition:.25s;box-shadow:0 10px 30px rgba(0,0,0,.45);z-index:50}
-.toast.show{opacity:1}
+/* hide reiniciar en web */
+@media(min-width:900px){ #resetBtn{display:none} }
 
-.confetti{position:fixed;inset:0;z-index:40;pointer-events:none}
-.confetti i{position:absolute;width:10px;height:14px;opacity:0;top:-20px;background:linear-gradient(#ffea00,#ff3d7f);
-  animation:drop 1.6s linear forwards;transform:rotate(360deg);border-radius:2px}
-@keyframes drop{8%{opacity:1}100%{transform:translateY(110vh) rotate(360deg);opacity:0}}
-
-/* Barra fija móvil */
-.mbar{
-  position:fixed;left:0;right:0;bottom:0;background:rgba(12,14,30,.9);backdrop-filter:blur(6px);
-  border-top:1px solid var(--border);display:flex;gap:10px;padding:10px;z-index:45
+/* WhatsApp FAB */
+.fab{
+  position:fixed; right:18px; bottom:88px; width:74px; height:74px; border-radius:50%;
+  background:var(--ok) url('img/whatsapp.svg') center/38px 38px no-repeat;
+  box-shadow:0 16px 40px rgba(37,211,102,.42), inset 0 0 18px rgba(255,255,255,.3);
+  border:0; cursor:pointer; z-index:40;
+  animation:heartbeat 1.6s ease-in-out infinite;
 }
-.mbar .btn{flex:1}
-.mbar .ok{display:flex;align-items:center;justify-content:center;gap:8px}
-.mbar .ok img{width:20px;height:20px}
+@media(min-width:900px){ .fab{bottom:22px} }
 
-/* Mostrar/ocultar botones por dispositivo */
-@media (max-width: 680px){
-  .only-desktop{display:none !important}
+/* efecto latido (también lo uso en el botón móvil “Reclamar”) */
+@keyframes heartbeat{
+  0%{transform:scale(1)} 25%{transform:scale(1.06)} 40%{transform:scale(0.98)}
+  60%{transform:scale(1.06)} 100%{transform:scale(1)}
 }
-@media (min-width: 681px){
-  .only-mobile{display:none !important}
-}
+.pulse{animation:heartbeat 1.6s ease-in-out infinite}
 
-/* Compactar header de móvil */
-@media (max-width:520px){
-  .container{padding-bottom:90px}
-  .header{padding:12px}
-  .pointer{top:10px}
-  h1{font-size:22px}
-  .kpi{width:72px;height:48px;font-size:18px}
+/* little switches */
+.switch{display:inline-flex;align-items:center;gap:8px}
+.toggle{
+  --w:54px; position:relative; width:var(--w); height:30px; border-radius:999px; background:#21305b; border:1px solid var(--border);
 }
+.toggle i{position:absolute; top:2px; left:2px; width:26px; height:26px; border-radius:50%; background:#8aa0ff; transition:.18s}
+.toggle.on{background:#153a2a;border-color:#1a5}
+.toggle.on i{left:calc(100% - 28px); background:#79ffb6}
+
+/* helper */
+.center{text-align:center}
+.spacer{height:10px}
 </style>
 </head>
 <body>
-<div id="toast" class="toast"></div>
-<div id="confetti" class="confetti" aria-hidden="true"></div>
 
-<div class="container card">
-  <div class="header" role="banner">
-    <div class="brand">BET300</div>
-    <span class="pill">Promo interactiva · válida <span class="tag" id="todayTag">hoy</span></span>
-    <span class="pill timer">⏳ <span id="countdown">--:--</span></span>
-    <div id="soundToggle" class="switch on pill" role="button" aria-label="Sonido">
-      <span>Sonido:</span>
-      <div class="dot"></div>
-    </div>
+<div class="container">
+  <div class="card">
+    <span class="brand">BET300</span>
+    <span class="pill">Promo interactiva · válida <b>hoy</b></span>
+    <span class="pill" id="deadlinePill">⏳ Tiempo limitado <b id="countdown">--:--</b></span>
+    <span class="pill switch">Sonido:
+      <span id="soundToggle" class="toggle on" role="switch" aria-checked="true"><i></i></span>
+    </span>
   </div>
 
   <div class="grid">
-    <!-- Ruleta -->
+    <!-- WHEEL -->
     <div class="panel">
       <div class="stage">
-        <div class="wrap">
-          <canvas id="wheel" width="620" height="620"></canvas>
-        </div>
-        <div class="pointer" aria-hidden="true"></div>
+        <div class="wrap"><canvas id="wheel" width="640" height="640"></canvas></div>
+        <div class="pointer"></div>
       </div>
     </div>
 
-    <!-- Lateral info -->
-    <div class="panel">
-      <div class="titleBox">
-        <div class="kpi" id="badge">-</div>
+    <!-- INFO -->
+    <div class="panel" id="infoPanel">
+      <div class="center" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px">
+        <div class="badge" id="badge">-</div>
         <div>
-          <h1 id="title">Tenés 1 giro disponible</h1>
-          <p class="muted" id="subtitle">Los premios se acreditan con tu <b>próxima carga mínima</b>.</p>
+          <div class="h1" id="title">Tenés 1 giro disponible</div>
+          <div class="muted" id="subtitle">Los premios se acreditan con tu <b>próxima carga mínima</b>.</div>
         </div>
       </div>
 
-      <div class="row only-desktop" style="margin-top:12px">
-        <button id="spinBtn" class="btn gradient">🎰 Girar ahora</button>
-        <button id="resetBtn" class="btn secondary">Reiniciar</button>
-        <button id="claimBtn" class="btn ok" disabled>📲 Reclamar</button>
-      </div>
-
-      <div class="note" style="margin-top:12px">
-        <span class="dot" aria-hidden="true"></span>
-        <div style="flex:1">
-          <b>Beneficio por tiempo limitado.</b><br>
-          <span class="muted">Accedé ahora y participá antes de que termine.</span>
-        </div>
-        <a id="platformBtn" class="link-btn" target="_blank" rel="noopener">🎮 Entrar a la plataforma</a>
+      <!-- Desktop CTAs -->
+      <div class="spacer"></div>
+      <div class="desk-ctas" style="display:grid;gap:10px;">
+        <button id="spinBtn" class="btn block">🎰 Girar ahora</button>
+        <button id="resetBtn" class="btn secondary block">Reiniciar</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Barra fija móvil -->
-<div class="mbar only-mobile">
-  <button id="mSpin" class="btn gradient">🎰 Girar</button>
-  <button id="mClaim" class="btn ok" disabled>
-    <img alt="" src="data:image/svg+xml;utf8,
-      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-        <path fill='%230b0f1e' d='M12.04 2a10 10 0 1 0 9.96 10.01A10 10 0 0 0 12.04 2Zm5.53 14.38c-.23.64-1.16 1.17-1.6 1.25a3.23 3.23 0 0 1-1.49-.09a6.89 6.89 0 0 1-1.3-.5a11.66 11.66 0 0 1-4.22-3.72a4.8 4.8 0 0 1-1-2.54c0-.54.26-1.21.66-1.33c.34-.11.78-.05 1 .23c.35.44 1 1.69 1 1.69s.1.2.06.32a1 1 0 0 1-.2.33c-.2.23-.42.5-.17.9a9.7 9.7 0 0 0 1.76 2.02A6.18 6.18 0 0 0 13.4 15c.39.16.64-.06.87-.26c.2-.18.46-.5.74-.46s2 1 2 1s.19.08.27.27a.78.78 0 0 1-.07.83Z'/>
-      </svg>"/>
-    Reclamar
-  </button>
+<!-- Mobile sticky CTAs -->
+<div class="cta-row" id="mobileBar">
+  <button id="spinBtnMobile" class="btn">🎰 Girar</button>
+  <button id="claimBtnMobile" class="btn ok pulse">📲 Reclamar</button>
 </div>
 
+<!-- WhatsApp FAB -->
+<button id="fab" class="fab" aria-label="WhatsApp"></button>
+
+<!-- Audios -->
+<audio id="sSpin" preload="auto" src="sounds/spin.mp3"></audio>
+<audio id="sWin"  preload="auto" src="sounds/win.mp3"></audio>
+
 <script>
-/* ========== Configuración ========== */
-const SLICES = [
-  {t:"$2.000", type:"$", val:2000}, {t:"10%", type:"%", val:10},
-  {t:"$3.000", type:"$", val:3000}, {t:"20%", type:"%", val:20},
-  {t:"$4.000", type:"$", val:4000}, {t:"30%", type:"%", val:30},
-  {t:"$5.000", type:"$", val:5000}, {t:"40%", type:"%", val:40},
-  {t:"$6.000", type:"$", val:6000}, {t:"50%", type:"%", val:50},
-  {t:"$7.000", type:"$", val:7000}, {t:"$8.000", type:"$", val:8000},
-  {t:"$9.000", type:"$", val:9000}, {t:"$10.000", type:"$", val:10000}
-]; // 14 secciones
+/* ================== Config ================== */
+const LABELS = [
+  "$2.000","10%","$3.000","20%","$4.000","30%","$5.000","40%",
+  "$6.000","50%","$7.000","$8.000","$9.000","$10.000","$2.000","10%"
+]; // 16 segmentos intercalados
+const COLORS = ["#96e7ff","#9ea5ff","#ffd3a6","#ff9bd1","#b2ffdd","#ffd3a6",
+                "#c9b8ff","#ffa5d6","#a8ffe7","#ffd3a6","#9fd1ff","#ffc0e3",
+                "#b9ffd7","#ffd3a6","#9ed2ff","#bba8ff"];
+const wpNumbers = { principal:"5491157737173", pc1:"5491138601132", pc2:"5491138214312", pc3:"5491168392647" };
+const wpMsg = "Hola, obtuve *%PRIZE%* en la promo y quiero reclamarlo ✅";
 
-const COLORS = [
-  "#7cc9ff","#a591ff","#ffd18a","#9ff6c8","#ff9bd1","#8ae0ff","#ffd18a",
-  "#9ff6c8","#ff9bd1","#a9c8ff","#ffd18a","#9ff6c8","#7cc9ff","#ffb3d9"
-];
+/* ================== Estado ================== */
+const wheel = document.getElementById('wheel');
+const ctx   = wheel.getContext('2d');
+let cssW=0,cx=0,cy=0,r=0;
+let angle=0, spinning=false, prize=null;
 
-/* WhatsApp por PC y link a plataforma */
-const WP_NUMBERS = {
-  principal:"5491157737173",
-  pc1:"5491138601132", pc2:"5491138214312", pc3:"5491168392647"
-};
-const PLATFORM_LINKS = {
-  principal:"https://plataforma.example/inicio",
-  pc1:"https://c01.bet300vip.com/",
-  pc2:"https://c02.bet300vip.com/",
-  pc3:"https://c03.bet300vip.com/"
-};
-const WP_MSG = "Hola, obtuve %PRIZE% en la promo y quiero reclamarlo con mi próxima carga.";
+const spinBtn = document.getElementById('spinBtn');
+const spinBtnMobile = document.getElementById('spinBtnMobile');
+const resetBtn = document.getElementById('resetBtn');
+const badge = document.getElementById('badge');
+const title = document.getElementById('title');
+const subtitle = document.getElementById('subtitle');
+const fab = document.getElementById('fab');
+const claimBtnMobile = document.getElementById('claimBtnMobile');
+const sSpin = document.getElementById('sSpin');
+const sWin  = document.getElementById('sWin');
+const soundToggle = document.getElementById('soundToggle');
+let soundOn = true;
 
-/* ========== Estado UI ========== */
-const $ = s=>document.querySelector(s);
-const wheel = $("#wheel"), ctx = wheel.getContext("2d");
-const spinBtn = $("#spinBtn"), resetBtn = $("#resetBtn"), claimBtn = $("#claimBtn");
-const mSpin = $("#mSpin"), mClaim = $("#mClaim");
-const badge = $("#badge"), title = $("#title"), subtitle = $("#subtitle");
-const countdownEl = $("#countdown"), toast = $("#toast"), confetti = $("#confetti");
-const platformBtn = $("#platformBtn");
-const soundToggle = $("#soundToggle");
-
-let cssW=0, cx=0, cy=0, r=0, angle=0, spinning=false, prize=null, soundOn=true;
-
-/* Parámetros */
+/* pc param */
 const params = new URLSearchParams(location.search);
-const pc = params.get("pc");
-let WP = WP_NUMBERS.principal;
-let PLATFORM = PLATFORM_LINKS.principal;
-if(pc==='1') { WP = WP_NUMBERS.pc1; PLATFORM = PLATFORM_LINKS.pc1; }
-if(pc==='2') { WP = WP_NUMBERS.pc2; PLATFORM = PLATFORM_LINKS.pc2; }
-if(pc==='3') { WP = WP_NUMBERS.pc3; PLATFORM = PLATFORM_LINKS.pc3; }
-platformBtn.href = PLATFORM;
+const pc = params.get('pc');
+let WP = wpNumbers.principal;
+if(pc==='1') WP = wpNumbers.pc1;
+if(pc==='2') WP = wpNumbers.pc2;
+if(pc==='3') WP = wpNumbers.pc3;
 
-/* ========== Audio (WebAudio) ========== */
-const AC = new (window.AudioContext || window.webkitAudioContext)();
-let gMaster = AC.createGain(); gMaster.gain.value = 0.35; gMaster.connect(AC.destination);
-
-function tick(){ if(!soundOn) return;
-  const o = AC.createOscillator(), g = AC.createGain();
-  o.type="square"; o.frequency.value=1200;
-  g.gain.value=.12; o.connect(g); g.connect(gMaster);
-  o.start(); setTimeout(()=>{o.stop(); g.disconnect();}, 40);
-}
-function fanfare(){ if(!soundOn) return;
-  const o = AC.createOscillator(), g = AC.createGain();
-  o.type="triangle"; o.frequency.value=440; g.gain.value=.001;
-  o.connect(g); g.connect(gMaster); o.start();
-  // pequeño glissando + subir ganancia
-  const now=AC.currentTime;
-  g.gain.exponentialRampToValueAtTime(.7, now+.05);
-  o.frequency.exponentialRampToValueAtTime(880, now+.35);
-  setTimeout(()=>{g.gain.exponentialRampToValueAtTime(.001, AC.currentTime+.2); setTimeout(()=>{o.stop();g.disconnect();}, 250)}, 380);
-}
-soundToggle.addEventListener("click", ()=>{
-  soundOn = !soundOn; soundToggle.classList.toggle("on", soundOn);
-});
-
-/* ========== Canvas Responsive ========== */
-function wrapW(){
-  const wrap = document.querySelector('.wrap');
-  return Math.floor((wrap?.getBoundingClientRect().width)||360);
+/* ================== Helper ================== */
+function norm(a){const T=Math.PI*2;return ((a%T)+T)%T}
+function byPointer(el, fn){
+  let armed=true;
+  const handler = (e)=>{ e.preventDefault(); if(!armed) return; armed=false; fn(); setTimeout(()=>armed=true,250); };
+  el.addEventListener('pointerup', handler, {passive:false});
 }
 function setSize(){
-  const dpr = window.devicePixelRatio || 1;
-  const w = Math.min(560, Math.max(280, wrapW()));
-  cssW = w;
-  wheel.width = Math.floor(w*dpr); wheel.height = Math.floor(w*dpr);
-  wheel.style.width = w+"px"; wheel.style.height = w+"px";
+  const dpr = window.devicePixelRatio||1;
+  const wrap = document.querySelector('.wrap').getBoundingClientRect();
+  const w = Math.min(560, Math.max(300, wrap.width));
+  cssW=w;
+  wheel.width = Math.floor(w*dpr);
+  wheel.height= Math.floor(w*dpr);
+  wheel.style.width=w+'px'; wheel.style.height=w+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
-  cx = wheel.width/dpr/2; cy = wheel.height/dpr/2; r = Math.min(cx,cy) - 14;
+  cx = wheel.width/dpr/2; cy = wheel.height/dpr/2; r = Math.min(cx,cy)-14;
   draw(angle);
 }
-window.addEventListener('resize', ()=>{ clearTimeout(window.__rt); window.__rt=setTimeout(setSize,120); });
+window.addEventListener('resize', ()=>{clearTimeout(window.__rs); window.__rs=setTimeout(setSize,120)});
 
-/* ========== Dibujo de la ruleta ========== */
+/* ================== Draw ================== */
 function draw(a){
   ctx.clearRect(0,0,wheel.width,wheel.height);
-  // Fondo con glow
-  ctx.save();
-  const grd = ctx.createRadialGradient(cx,cy,r*.1,cx,cy,r);
-  grd.addColorStop(0,"#0f1434"); grd.addColorStop(1,"#0b0f1e");
-  ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(cx,cy,r+12,0,Math.PI*2); ctx.fill(); ctx.restore();
+  const n = LABELS.length; const arc = Math.PI*2/n;
+  // rim
+  ctx.beginPath(); ctx.arc(cx,cy,r+16,0,Math.PI*2); ctx.lineWidth=18; ctx.strokeStyle="rgba(190,205,255,.45)"; ctx.stroke();
 
-  // anillo exterior
-  ctx.beginPath(); ctx.arc(cx,cy,r+8,0,Math.PI*2);
-  ctx.lineWidth=14; ctx.strokeStyle="#d8defc"; ctx.stroke();
-
-  const n=SLICES.length, arc=Math.PI*2/n;
-
-  // sectores
   for(let i=0;i<n;i++){
     const s=a+i*arc, e=s+arc;
+    // slice
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,s,e); ctx.closePath();
     ctx.fillStyle = COLORS[i%COLORS.length]; ctx.fill();
     ctx.strokeStyle="rgba(10,15,35,.35)"; ctx.lineWidth=2; ctx.stroke();
 
-    // etiqueta
+    // label
     ctx.save(); ctx.translate(cx,cy); ctx.rotate(s+arc/2);
-    const lab = SLICES[i].t;
-    ctx.textAlign="right";
-    ctx.font = (cssW<=360) ? "900 22px system-ui,-apple-system,Segoe UI" :
-               (cssW<=420) ? "900 26px system-ui,-apple-system,Segoe UI" :
-               (cssW<=480) ? "900 30px system-ui,-apple-system,Segoe UI" :
-                             "900 34px system-ui,-apple-system,Segoe UI";
-    ctx.fillStyle="#091024";
-    ctx.fillText(lab, r-22, 10);
+    ctx.textAlign="right"; ctx.fillStyle="#091024";
+    const f = (cssW<360)? "700 22px system-ui" : (cssW<420? "700 26px system-ui" : "700 30px system-ui");
+    ctx.font = f;
+    ctx.fillText(LABELS[i], r-22, 10);
     ctx.restore();
   }
-
-  // luces del anillo
-  const bulbs = n*2;
+  // bulbs
+  const bulbs = n; const br = r+10;
   for(let i=0;i<bulbs;i++){
-    const t = a + i*(Math.PI*2/bulbs);
-    const rr = r + 6;
-    const x = cx + Math.cos(t)*rr;
-    const y = cy + Math.sin(t)*rr;
-    ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2);
-    ctx.fillStyle = i%2 ? "#e7edff" : "#b5c0ff";
-    ctx.fill();
+    const t=a+i*arc + arc/2;
+    const x=cx+Math.cos(t)*br, y=cy+Math.sin(t)*br;
+    ctx.beginPath(); ctx.arc(x,y,6,0,Math.PI*2);
+    ctx.fillStyle= i%2? "rgba(255,255,255,.85)" : "rgba(180,200,255,.7)"; ctx.fill();
   }
-
-  // centro
-  ctx.beginPath(); ctx.arc(cx,cy,Math.max(34, r*0.12),0,Math.PI*2);
-  ctx.fillStyle="#0e1230"; ctx.fill();
-  ctx.lineWidth=4; ctx.strokeStyle="rgba(124,77,255,.6)"; ctx.stroke();
+  // hub
+  ctx.beginPath(); ctx.arc(cx,cy,Math.max(34, r*0.11), 0, Math.PI*2);
+  ctx.fillStyle="#0d1233"; ctx.fill(); ctx.lineWidth=6; ctx.strokeStyle="rgba(124,77,255,.5)"; ctx.stroke();
 }
 
-/* ========== Lógica de premio bajo el puntero ========== */
-function norm(x){ const T=Math.PI*2; return ((x%T)+T)%T; }
+/* where the pointer lands (top) */
 function winnerIndex(a){
-  const n=SLICES.length, arc=Math.PI*2/n, pointer=Math.PI*1.5; // arriba
-  let idx=0, best=1e9;
+  const n=LABELS.length, arc=Math.PI*2/n, pointer=Math.PI*1.5;
+  let best=0, bd=1e9;
   for(let i=0;i<n;i++){
-    const c = norm(a + i*arc + arc/2);
-    let d = Math.abs(norm(c - pointer)); if(d>Math.PI) d=(Math.PI*2)-d;
-    if(d<best){best=d; idx=i;}
+    const c=norm(a+i*arc+arc/2);
+    let d=Math.abs(norm(c-pointer)); if(d>Math.PI) d=(Math.PI*2)-d;
+    if(d<bd){bd=d; best=i;}
   }
-  return idx;
+  return best;
 }
 
-/* ========== Animación de giro ========== */
-function animateTo(target, ms, onEnd){
+/* anim */
+function animateTo(target, ms, done){
   const start=performance.now(), from=angle;
-  function loop(t){
-    const k = Math.min(1,(t-start)/ms);
-    const ease = 1 - Math.pow(1-k,3);
-    angle = from + (target-from)*ease;
-    draw(angle);
-    // ticks
-    if(k<.995 && (Math.floor(k*40)!==Math.floor((k-.02)*40))) tick();
-    if(k<1) requestAnimationFrame(loop); else onEnd && onEnd();
-  }
-  requestAnimationFrame(loop);
+  (function loop(t){
+    const k=Math.min(1,(t-start)/ms); const ease=1-Math.pow(1-k,3);
+    angle=from+(target-from)*ease; draw(angle);
+    if(k<1) requestAnimationFrame(loop); else done&&done();
+  })(start);
 }
 
-/* ========== Acciones ========== */
-function onSpin(){
+/* audio toggle */
+soundToggle.addEventListener('click', ()=>{
+  soundOn = !soundOn;
+  soundToggle.classList.toggle('on', soundOn);
+});
+
+/* claim: build wa link + tracking */
+function goWhatsApp(amountLabel){
+  const msg = wpMsg.replace("%PRIZE%", amountLabel);
+  const url = `https://wa.me/${WP}?text=${encodeURIComponent(msg)}`;
+  try{ fbq('trackCustom','WhatsAppClick',{pc:pc||'principal', prize: amountLabel}); }catch(_){}
+  location.href = url;
+}
+
+/* set won UI */
+function setWon(label){
+  badge.textContent = label;
+  title.textContent = "🎉 ¡Premio obtenido!";
+  subtitle.innerHTML = `Recibís <b>${label} en fichas</b> con tu próxima carga.`;
+  if(soundOn){ sWin.currentTime=0; sWin.play().catch(()=>{}); }
+  // wire claim buttons
+  claimBtnMobile.onclick = ()=> goWhatsApp(label);
+  fab.onclick = ()=> goWhatsApp(label);
+}
+
+/* spin */
+function spin(){
   if(spinning) return;
-  if(isExpired()) return toastMsg("La promoción finalizó");
-  if(localStorage.getItem('spin_done')==='1') return toastMsg("Ya usaste tu giro de hoy");
-
   spinning=true;
-  (spinBtn||{}).disabled = true; (mSpin||{}).disabled = true;
-
-  const extra = 5 + Math.random()*1.3;
-  const offset = Math.random()*Math.PI*2;
-  const final = angle + Math.PI*2*extra + offset;
-
-  animateTo(final, 3200, ()=>{
-    angle = final;
+  if(soundOn){ sSpin.currentTime=0; sSpin.play().catch(()=>{}); }
+  const extra = 5 + Math.random()*1.5;
+  const rnd = Math.random()*Math.PI*2;
+  const target = angle + Math.PI*2*extra + rnd;
+  animateTo(target, 3000, ()=>{
+    angle = target;
     const idx = winnerIndex(angle);
-    const s = SLICES[idx];
-    prize = s;
-    setWon(s);
+    const label = LABELS[idx];
+    prize = label;
+    setWon(label);
     localStorage.setItem('spin_done','1');
-    localStorage.setItem('spin_prize', JSON.stringify(s));
+    localStorage.setItem('spin_label', label);
     spinning=false;
-    (mSpin||{}).disabled = true;
-    fanfare();
-    burst();
   });
 }
 
-function setWon(s){
-  badge.textContent = s.t;
-  title.textContent = "🎉 ¡Premio obtenido!";
-  if(s.type==="$"){
-    subtitle.innerHTML = `Recibís <b>${s.t} en fichas</b> con tu próxima carga.`;
-  }else{
-    subtitle.innerHTML = `Recibís <b>${s.t} extra</b> con tu próxima carga.`;
-  }
-  (claimBtn||{}).disabled = false; (mClaim||{}).disabled = false;
-
-  const msg = WP_MSG.replace("%PRIZE%", s.t);
-  const wurl = `https://wa.me/${WP}?text=${encodeURIComponent(msg)}`;
-  function go(){ location.href = wurl; }
-  (claimBtn||{}).onclick = go;
-  (mClaim||{}).onclick = go;
-}
-function onReset(){
+/* reset */
+function resetSpin(){
   localStorage.removeItem('spin_done');
-  localStorage.removeItem('spin_prize');
-  prize=null; angle=0; draw(angle);
-  badge.textContent="-"; title.textContent="Tenés 1 giro disponible";
-  subtitle.innerHTML = `Los premios se acreditan con tu <b>próxima carga mínima</b>.`;
-  (claimBtn||{}).disabled = true; (mClaim||{}).disabled = true;
-  (spinBtn||{}).disabled = false; (mSpin||{}).disabled = false;
+  localStorage.removeItem('spin_label');
+  prize=null; badge.textContent='-';
+  title.textContent='Tenés 1 giro disponible';
+  subtitle.innerHTML='Los premios se acreditan con tu <b>próxima carga mínima</b>.';
 }
 
-/* ========== Contador a hoy 23:59 ========== */
-const DEADLINE_KEY = 'promo_end_fixed_ts';
-function computeToday2359(){
-  const now=new Date();
-  const end=new Date(now.getFullYear(),now.getMonth(),now.getDate(),23,59,0,0).getTime();
-  return end>now.getTime()?end:new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,23,59,0,0).getTime();
+/* bind spins with pointer (móvil + desktop) */
+byPointer(spinBtn, spin);
+byPointer(spinBtnMobile, spin);
+byPointer(fab, ()=>{ if(prize){ goWhatsApp(prize);} });
+
+if(resetBtn) byPointer(resetBtn, resetSpin);
+
+/* countdown a hoy 23:59 */
+function deadlineTS(){
+  const n=new Date();
+  const end=new Date(n.getFullYear(), n.getMonth(), n.getDate(), 23,59,0,0);
+  if(end.getTime()<Date.now()) end.setDate(end.getDate()+1);
+  return end.getTime();
 }
-function getOrInitDeadline(){
-  const saved=+localStorage.getItem(DEADLINE_KEY)||0, now=Date.now();
-  if(saved && saved>now) return saved;
-  const end = computeToday2359(); localStorage.setItem(DEADLINE_KEY,String(end)); return end;
+const END_KEY='promo_end_ts';
+if(!localStorage.getItem(END_KEY)) localStorage.setItem(END_KEY, String(deadlineTS()));
+function fmt(ms){ const s=Math.floor(ms/1000);
+  const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), ss=s%60;
+  return (h>0? h+':':'')+String(m).padStart(2,'0')+':'+String(ss).padStart(2,'0');}
+function tick(){
+  const ms= Math.max(0, parseInt(localStorage.getItem(END_KEY)||'0',10) - Date.now());
+  document.getElementById('countdown').textContent = fmt(ms);
+  if(ms<=0){ spinBtn.disabled=spinBtnMobile.disabled=true; }
 }
-function remainMs(){ return Math.max(0, getOrInitDeadline()-Date.now()); }
-function fmt(ms){
-  const t=Math.floor(ms/1000), h=Math.floor(t/3600), m=Math.floor((t%3600)/60), s=t%60;
-  return (h>0?`${h}:`:"") + String(m).padStart(2,'0') + ":" + String(s).padStart(2,'0');
-}
-function tickTimer(){
-  const ms=remainMs(); countdownEl.textContent = fmt(ms);
-  return ms<=0;
-}
-function isExpired(){ return remainMs()<=0; }
+setInterval(tick, 1000); tick();
 
-/* ========== UI utils ========== */
-function toastMsg(msg){ toast.textContent=msg; toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1700); }
-function burst(){
-  confetti.innerHTML=''; const n=28;
-  for(let i=0;i<n;i++){
-    const p=document.createElement('i');
-    p.style.left=(Math.random()*100)+'vw';
-    p.style.animationDelay=(Math.random()*0.5)+'s';
-    p.style.background = Math.random()<.5 ? 'linear-gradient(#80ffea,#4e9cff)' : 'linear-gradient(#ffd166,#ff3d7f)';
-    confetti.appendChild(p);
-  }
-  setTimeout(()=>confetti.innerHTML='',1600);
-}
+/* restore state */
+const saved = localStorage.getItem('spin_label');
+if(saved){ setWon(saved); }
 
-/* ========== Eventos ========== */
-window.addEventListener('DOMContentLoaded', ()=>{
-  // hoy tag
-  const now=new Date(), dd=String(now.getDate()).padStart(2,'0'), mm=String(now.getMonth()+1).padStart(2,'0');
-  $("#todayTag").textContent = `hoy ${dd}/${mm}`;
+/* init */
+setSize(); draw(angle);
 
-  setSize(); draw(angle);
-
-  (spinBtn||{}).addEventListener('click', onSpin);
-  (mSpin||{}).addEventListener('click', onSpin);
-  (resetBtn||{}).addEventListener('click', onReset);
-
-  // restaurar premio si ya hubo
-  const saved = localStorage.getItem('spin_prize');
-  if(saved){
-    try{ const s=JSON.parse(saved); if(s?.t){ setWon(s); } }catch{}
-  }
-
-  tickTimer(); const int=setInterval(()=>{ if(tickTimer()){ clearInterval(int); (spinBtn||{}).disabled=true; (mSpin||{}).disabled=true; toastMsg("La promo terminó"); } }, 1000);
-});
+/* claim buttons initial (in caso no haya premio aún) */
+claimBtnMobile.onclick = ()=> goWhatsApp(prize || '-');
+fab.onclick = ()=> goWhatsApp(prize || '-');
 </script>
 </body>
 </html>
