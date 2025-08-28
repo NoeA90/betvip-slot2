@@ -1,13 +1,265 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BET300 · Promo interactiva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b1224;
+    --card:#0f1831;
+    --ink:#0a1030;
+    --muted:#9ab0d0;
+    --brand1:#ff9966;
+    --brand2:#ff5e62;
+    --ok:#19c37d;
+    --btnSpin1:#ff7e7e;
+    --btnSpin2:#ff8f73;
+    --btnClaim1:#19c37d;
+    --btnClaim2:#15a66a;
+    --chip:#1b2a52;
+    --ledOn:#dff1ff;
+    --ledOff:#6b7aa5;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: radial-gradient(1200px 800px at 50% -10%, #132043 0%, #0b1224 60%) fixed;
+    color:#e9f0ff; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  }
+
+  /* Header badges */
+  .wrap{max-width:980px; margin-inline:auto; padding:18px 16px 120px}
+  .top{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+  .badge{background:linear-gradient(135deg, var(--brand1), var(--brand2)); color:#091426;
+    padding:10px 16px; border-radius:14px; font-weight:900; letter-spacing:.5px; box-shadow:0 6px 18px rgba(255,105,97,.25)}
+  .pill{background:linear-gradient(135deg, #233564, #18274b); color:#d6e2ff;
+    border:1px solid rgba(255,255,255,.08); padding:10px 14px; border-radius:14px; display:flex; gap:10px; align-items:center}
+  .pill small{opacity:.75}
+  .accent{background:linear-gradient(135deg, #18274b, #253a70)}
+  .link{color:#bfe0ff; text-decoration:none}
+  .link:hover{opacity:.9}
+
+  /* Wheel card */
+  .card{margin-top:16px; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+    border:1px solid rgba(255,255,255,.06); border-radius:24px; padding:18px; position:relative;
+    box-shadow: 0 12px 35px rgba(0,0,0,.35) inset, 0 8px 24px rgba(0,0,0,.25);
+  }
+  .stage{position:relative; width:100%; display:grid; place-items:center; padding:8px}
+  canvas{display:block; width:min(92vw, 640px); height:auto; aspect-ratio:1/1;}
+
+/* pointer */
+  .pointer{
+    position:absolute; top:8px; left:50%; transform:translateX(-50%);
+    width:min(9.5vw, 56px); aspect-ratio:1/1; filter:drop-shadow(0 6px 10px rgba(0,255,255,.25));
+  }
+  .pointer svg{width:100%; height:100%}
+
+  /* Prize panel */
+  .prize{
+    margin-top:14px; padding:16px; border-radius:18px; background:rgba(9,20,38,.55);
+    border:1px solid rgba(255,255,255,.06);
+  }
+  .prize h3{margin:0 0 8px; font-size:clamp(18px, 3.8vw, 26px)}
+  .prize p{margin:0; color:var(--muted)}
+  .pillWin{display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:14px;
+    background:linear-gradient(145deg, #1d2c55, #142247); border:1px solid rgba(255,255,255,.06); margin-right:10px;
+    font-weight:900; color:#dff1ff;
+  }
+
+  /* Sticky actions */
+  .actions{
+    position:fixed; left:0; right:0; bottom:0; padding:10px 12px 14px; display:flex; gap:10px;
+    background:linear-gradient(180deg, rgba(7,12,24,0) 0%, rgba(7,12,24,.75) 25%, rgba(7,12,24,.95) 100%);
+    z-index:40;
+  }
+  .btn{
+    flex:1 1 0; border:none; padding:16px 18px; border-radius:16px; font-weight:900; letter-spacing:.3px;
+    color:#061225; cursor:pointer; transition:transform .08s ease, filter .2s ease;
+  }
+  .btn:active{transform:translateY(1px)}
+  .spin{background:linear-gradient(135deg, var(--btnSpin1), var(--btnSpin2));}
+  .claim{background:linear-gradient(135deg, var(--btnClaim1), var(--btnClaim2));}
+  .btn:disabled{filter:grayscale(1) brightness(.7); cursor:not-allowed}
+
+  /* Floating WhatsApp */
+  .wafloat{
+    position:fixed; right:14px; bottom:92px; width:64px; height:64px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #3bff98 0%, #19c37d 40%, #12a568 100%);
+    display:grid; place-items:center; box-shadow:0 12px 24px rgba(25,195,125,.35), 0 0 0 8px rgba(25,195,125,.12);
+    z-index:41; text-decoration:none;
+    animation:heartbeat 1.4s ease-in-out infinite;
+  }
+  .wafloat svg{width:34px; height:34px; fill:#fff}
+  @keyframes heartbeat{
+    0%{transform:scale(1)}
+    12%{transform:scale(1.07)}
+    24%{transform:scale(1)}
+    36%{transform:scale(1.05)}
+    48%{transform:scale(1)}
+    100%{transform:scale(1)}
+  }
+
+  /* Desktop adjustments */
+  @media(min-width:880px){
+    .actions{position:static; background:transparent; padding:0; margin-top:18px}
+    .wafloat{right:26px; bottom:26px}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="badge">BET300</div>
+      <div class="pill accent">Promo interactiva · válida <strong>hoy</strong></div>
+      <div class="pill"><span>⏳</span><span>Tiempo limitado</span><strong id="timer">--:--:--</strong></div>
+      <div class="pill"><span>🔊</span><span>Sonido:</span>
+        <label style="display:inline-flex;gap:8px;align-items:center;">
+          <input id="soundToggle" type="checkbox" checked>
+          <small>ON</small>
+        </label>
+      </div>
+      <div class="pill">
+        <a id="platformLink" class="link" href="#" target="_blank">Acceder a la plataforma ⤴</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stage">
+        <img class="pointer" alt="" src="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' x2='0' y1='0' y2='1'><stop offset='0' stop-color='%2326dbff'/><stop offset='1' stop-color='%2300a6ff'/></linearGradient></defs><path d='M50 6 L68 48 A20 20 0 0 1 32 48 Z' fill='url(%23g)' stroke='%23055' stroke-width='2'/><circle cx='50' cy='50' r='8' fill='%23baf2ff' opacity='.25'/></svg>">
+        <canvas id="wheel"></canvas>
+      </div>
+
+      <div class="prize" id="prizePanel">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="pillWin" id="pillValue">$ -</span>
+          <h3>🎉 ¡Premio obtenido!</h3>
+        </div>
+        <p>Recibís <strong id="prizeText">-</strong> con tu <strong>próxima carga</strong>.</p>
+      </div>
+
+      <div class="actions">
+        <button id="spinBtn" class="btn spin">🎰 Girar</button>
+        <a id="claimBtn" class="btn claim" target="_blank" href="#">📲 Reclamar</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- WhatsApp flotante -->
+  <a id="waFloat" class="wafloat" href="#" target="_blank" aria-label="WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.5 11.5 0 0 0 3.43 18.32L2 22l3.8-1.37A11.5 11.5 0 1 0 20.5 3.5Zm-4.2 13.17c-.55.16-1.27.3-2.18-.13-1.17-.54-2.36-1.03-3.98-2.78-1.5-1.61-2.26-3.31-2.53-3.86-.28-.55-.05-1.2.2-1.55.24-.34.54-.85.83-.98.28-.13.63-.13.82-.05.25.1.54.97.68 1.35.13.37.19.61.13.83-.06.21-.24.5-.44.8-.2.3-.42.66-.2 1.06.22.4.98 1.6 2.1 2.59 1.45 1.25 2.66 1.62 3.07 1.8.41.18.65.15.89-.09.24-.24.96-1.03 1.22-1.39.27-.36.57-.3.95-.18.38.12 1.21.57 1.42.67.21.1.35.16.4.26.06.1.06.62-.1 1.17-.16.55-.94 1.08-1.49 1.24Z"/></svg>
+  </a>
+
+<script>
+/* ===================== CONFIG ===================== */
+const segments = [
+  "$10.000","$2.000","10%","$3.000","20%","$4.000","30%",
+  "$5.000","40%","$6.000","50%","$7.000","$8.000","$9.000"
+];
+
+const PC_LINKS = {
+  // EDITÁ ACÁ tus números/links reales:
+  "1": { wa:"https://wa.me/59899999999?text=Hola%20Quiero%20mi%20beneficio", platform:"https://tu-plataforma-1.com" },
+  "2": { wa:"https://wa.me/59888888888?text=Hola%20Quiero%20mi%20beneficio", platform:"https://tu-plataforma-2.com" },
+  "3": { wa:"https://wa.me/59877777777?text=Hola%20Quiero%20mi%20beneficio", platform:"https://tu-plataforma-3.com" },
+};
+const DEFAULT_LINKS = { wa:"https://wa.me/598999999?text=Hola%20Quiero%20mi%20beneficio", platform:"https://tu-plataforma.com" };
+
+/* ===================== ENLACES POR ?pc= ===================== */
+const params = new URLSearchParams(location.search);
+const pc = params.get("pc");
+const links = PC_LINKS[pc] || DEFAULT_LINKS;
+document.getElementById("claimBtn").href = links.wa;
+document.getElementById("waFloat").href = links.wa;
+document.getElementById("platformLink").href = links.platform;
+
+/* ===================== TIMER (3h) ===================== */
+const end = Date.now() + 3*60*60*1000;
+const timerEl = document.getElementById("timer");
+const tInt = setInterval(()=>{
+  const left = Math.max(0, end - Date.now());
+  const h = String(Math.floor(left/3600000)).padStart(2,"0");
+  const m = String(Math.floor((left%3600000)/60000)).padStart(2,"0");
+  const s = String(Math.floor((left%60000)/1000)).padStart(2,"0");
+  timerEl.textContent = `${h}:${m}:${s}`;
+  if(left<=0) clearInterval(tInt);
+}, 250);
+
+/* ===================== SONIDOS ===================== */
+const soundToggle = document.getElementById("soundToggle");
+const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+
+function playTick(){
+  if(!soundToggle.checked) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type="square"; o.frequency.value=880;
+  g.gain.value=.06;
+  o.connect(g).connect(audioCtx.destination);
+  o.start();
+  setTimeout(()=>{ o.stop(); }, 25);
+}
+function playWin(){
+  if(!soundToggle.checked) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type="triangle"; o.frequency.value=440;
+  g.gain.setValueAtTime(.001, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.15, audioCtx.currentTime+.05);
+  g.gain.exponentialRampToValueAtTime(.001, audioCtx.currentTime+.5);
+  o.connect(g).connect(audioCtx.destination);
+  o.start(); setTimeout(()=>o.stop(), 600);
+}
+
+/* ===================== RULETA ===================== */
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+
+let W=600, H=600, radius=260;
+function resize(){
+  const px = Math.min(window.innerWidth*0.92, 640);
+  canvas.width = canvas.height = Math.round(px*2); // HiDPI
+  W=canvas.width; H=canvas.height;
+  radius = Math.min(W,H)*0.38;
+  drawWheel(currentAngle);
+}
+window.addEventListener('resize', resize);
+
+/* Centro y estado */
+const center = {x:0, y:0}; // usaremos translate
+let currentAngle = 0;
+let spinning=false;
+
+/* Colores alternados suaves */
+function segColor(i){
+  const palette = ["#c0eaff","#a8e4ff","#ffd2e2","#fff0b8"]; // 4 tonos pastel
+  return palette[i%palette.length];
+}
+
+/* Dibujo de rueda con texto vertical por gajo */
 function drawWheel(a){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  const cx=center.x, cy=center.y;
+  const cx = canvas.width/2, cy = canvas.height/2;
   const segN = segments.length;
   const step = 2*Math.PI/segN;
 
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // fondo oscuro circular
   ctx.save();
   ctx.translate(cx,cy);
   ctx.rotate(a);
 
+  // anillo exterior (base)
+  ctx.beginPath();
+  ctx.arc(0,0,radius+26,0,Math.PI*2);
+  ctx.lineWidth=28;
+  ctx.strokeStyle="rgba(255,255,255,.08)";
+  ctx.stroke();
+
+  // gajos + texto
   for(let i=0;i<segN;i++){
     const start=i*step, end=start+step, mid=(start+end)/2;
 
@@ -19,48 +271,128 @@ function drawWheel(a){
     ctx.fillStyle = segColor(i);
     ctx.fill();
 
-    // borde del sector
+    // borde sutil del sector
     ctx.lineWidth=2;
-    ctx.strokeStyle="#1a2849";
+    ctx.strokeStyle="rgba(10,16,48,.45)";
     ctx.stroke();
 
-    // ==== TEXTO VERTICAL DENTRO DEL GAJO ====
-    // Configuración de tipografía (más grande para $)
+    // ==== TEXTO VERTICAL EN EL RADIO ====
     const isMoney = segments[i].includes("$");
-    const fs = Math.max(18, Math.min(42, radius * (isMoney ? 0.16 : 0.145)));
+    const fs = Math.max(32, Math.min(76, radius * (isMoney ? 0.20 : 0.18)));
     ctx.font = `900 ${fs}px Montserrat, Arial`;
     ctx.fillStyle = "#0a1030";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    // Apilado vertical por carácter: del borde hacia adentro
-    const text = segments[i];
-    const outerR = radius * 0.92;     // borde exterior donde empieza
-    const innerR = radius * 0.38;     // hasta dónde entra
-    const steps  = Math.max(1, text.length - 1);
-    const gap    = (outerR - innerR) / steps;
+    const text = segments[i];             // cadena completa
+    const outerR = radius * 0.93;         // arranca cerca del borde
+    const innerR = radius * 0.40;         // hasta este radio
+    const steps = Math.max(1, text.length-1);
+    const gap   = (outerR - innerR) / steps;
 
     ctx.save();
-    // rotamos al centro del gajo para alinear el radio
-    ctx.rotate(mid);
+    ctx.rotate(mid);                      // alineamos al centro del gajo
 
-    for (let k = 0; k < text.length; k++) {
-      const rpos = outerR - k * gap;  // posición radial
+    for(let k=0;k<text.length;k++){
+      const rpos = outerR - k*gap;
       ctx.save();
-      ctx.translate(rpos, 0);         // nos movemos a lo largo del radio
-      ctx.rotate(-mid);               // contrarrotamos: letra “derecha” en la pantalla
-      ctx.fillText(text[k], 0, 0);    // dibujamos el carácter
+      ctx.translate(rpos, 0);             // avanzamos por el radio
+      ctx.rotate(-mid);                    // enderezamos las letras
+      ctx.fillText(text[k], 0, 0);
       ctx.restore();
     }
     ctx.restore();
-    // ====== FIN TEXTO ======
+    // ==== FIN TEXTO ====
   }
 
-  // aro interior oscuro
+  // aro interior
   ctx.beginPath();
   ctx.fillStyle="#0b1326";
   ctx.arc(0,0, radius*0.18, 0, Math.PI*2);
   ctx.fill();
 
+  // LEDs exteriores
+  const leds = 42;
+  for(let i=0;i<leds;i++){
+    const ang = i*(2*Math.PI/leds);
+    const r = radius+14;
+    const x = Math.cos(ang)*r;
+    const y = Math.sin(ang)*r;
+    ctx.beginPath();
+    ctx.fillStyle = (i%2===0)? "rgba(223,241,255,.95)" : "rgba(125,150,195,.55)";
+    ctx.arc(x,y, 10, 0, Math.PI*2);
+    ctx.fill();
+  }
+
   ctx.restore();
 }
+
+/* Índice del gajo ganador bajo el triángulo superior */
+function indexUnderPointer(angle){
+  const segN = segments.length;
+  const step = 2*Math.PI/segN;
+  // Triángulo en la parte superior (ángulo  -90° relativo a canvas),
+  // pero como rotamos la rueda, basta con invertir la rotación:
+  let a = (2*Math.PI - (angle % (2*Math.PI))) % (2*Math.PI);
+  const idx = Math.floor(a / step) % segN;
+  return idx;
+}
+
+/* Animación de giro */
+const spinBtn = document.getElementById("spinBtn");
+const prizeText = document.getElementById("prizeText");
+const pillValue = document.getElementById("pillValue");
+
+function easeOutCubic(t){ return 1-Math.pow(1-t,3); }
+
+function spin(){
+  if(spinning) return;
+  spinning=true; spinBtn.disabled=true;
+
+  // 3–6 vueltas + aleatorio de segmento
+  const segN = segments.length;
+  const step = 2*Math.PI/segN;
+  const targetIdx = Math.floor(Math.random()*segN);
+  const targetAngle = targetIdx * step; // ángulo que queremos "quede arriba" tras invertir
+  const baseTurns = 3 + Math.floor(Math.random()*3);
+  const total = baseTurns*2*Math.PI + targetAngle;
+
+  const start = performance.now();
+  const duration = 3200 + Math.random()*900;
+
+  let lastTickIdx=-1;
+
+  function frame(now){
+    const t = Math.min(1, (now-start)/duration);
+    const eased = easeOutCubic(t);
+    currentAngle = (total*eased) % (2*Math.PI);
+    drawWheel(currentAngle);
+
+    // tick sutil por paso de gajo
+    const curIdx = indexUnderPointer(currentAngle);
+    if(curIdx!==lastTickIdx){ playTick(); lastTickIdx=curIdx; }
+
+    if(t<1){ requestAnimationFrame(frame); }
+    else{
+      const idx = indexUnderPointer(currentAngle);
+      const val = segments[idx];
+      pillValue.textContent = val;
+      prizeText.textContent = val.includes("$") ? `${val} en fichas` : `${val} extra`;
+      playWin();
+      spinning=false; spinBtn.disabled=false;
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ===================== INIT ===================== */
+document.getElementById("spinBtn").addEventListener("click", spin);
+resize(); // prepara canvas y dibuja
+drawWheel(currentAngle);
+
+/* Primer valor visible en el panel */
+pillValue.textContent = "-";
+prizeText.textContent = "-";
+</script>
+</body>
+</html>
